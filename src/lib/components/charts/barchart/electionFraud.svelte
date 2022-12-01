@@ -14,6 +14,7 @@
 	const xKey = (d) => d3.timeParse('%Y-%V')(d.date);
 	const formatXkey = d3.timeFormat();
 	const yKey = 'total';
+	// const yKey = (d) => d.total * 100
 
 	///
 	const parseDateYearWeek = d3.timeParse('%Y-%V'); //parse 2012-23....YEAR_WEEK
@@ -54,22 +55,3 @@
 		</Svg>
 	</LayerCake>
 </div>
-
-<!-- 
-<g>
-	<AxisX
-		gridlines={false}
-		snapTicks
-		ticks={[
-			timeParse('%m %Y')('4 2020'),
-			timeParse('%m %Y')('4 2021'),
-			timeParse('%m %Y')('4 2022')
-		]}
-		formatTick={(tick) => `Q2 ${timeFormat('%Y')(tick)}`}
-	/>
-	<AxisY
-		formatTick={() => ''}
-		ticks={[minValue, (minValue + maxValue) / 2, maxValue]}
-		label={i % numCols === 0 ? 'Review Mentions Per Million Words' : ''}
-	/>
-</g> -->
