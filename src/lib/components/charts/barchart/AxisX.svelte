@@ -54,8 +54,8 @@
 </script>
 
 <g class="axis x-axis" class:snapTicks>
-	{#each tickVals as tick, i}
-		<g class="tick tick-{i}" transform="translate({$xScale(tick)},{$yRange[1]})">
+	{#each tickVals as tick, i (tick)}
+		<g class="tick tick-{i}" transform="translate({$xScale(tick)},{Math.max(...$yRange)})">
 			{#if gridlines !== false}
 				<line class="gridline" y1={$height * -1} y2="0" x1="0" x2="0" />
 			{/if}
@@ -86,26 +86,16 @@
 	.tick {
 		@apply cmsvelte-font-mono cmsvelte-font-thin cmsvelte-text-sm;
 	}
-
-	line,
 	.tick line {
-		@apply cmsvelte-stroke-gray-400;
+		@apply cmsvelte-stroke-gray-300;
+	}
+	.tick .gridline {
 		stroke-dasharray: 2;
 	}
-
 	.tick text {
 		@apply cmsvelte-fill-gray-500;
 	}
-
-	.tick .tick-mark,
-	.baseline {
+	.tick.tick-0 line {
 		stroke-dasharray: 0;
-	}
-	/* This looks slightly better */
-	.axis.snapTicks .tick:last-child text {
-		@apply cmsvelte-translate-x-3;
-	}
-	.axis.snapTicks .tick.tick-0 text {
-		@apply cmsvelte--translate-x-3;
 	}
 </style>

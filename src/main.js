@@ -10,33 +10,26 @@ import ImageSrc from '$lib/assets/san-felipe-del-morro-castle.jpg?w=650&webp';
 import ImageSrcset from '$lib/assets/san-felipe-del-morro-castle.jpg?w=300;600;900&webp&srcset';
 
 // viz components
-import BarChart from '$lib/components/charts/barchart/index.svelte';
-import AI2HTML from '$lib/components/media/ai2html/ai2html.svelte';
+import ElectionFraud from '$lib/components/charts/barchart/electionFraud.svelte';
+import CovidClaims from '$lib/components/charts/barchart/covidClaims.svelte';
+import EpisodeIdeology from '$lib/components/charts/barchart/episodeIdeology.svelte';
 
 // an array of our components, mapped to match the <figure data-cmsvelte=""> elements in index.html
 const components = [
+
 	{
-		chartID: 'castle-img',
-		Component: Image,
-		props: {
-			loading: 'lazy',
-			alt: 'A few tourists walk up the lawn to the side of the old stone San Felipe del Morro Castle in San Juan, Puerto Rico',
-			placeholder: ImagePlaceholder,
-			src: ImageSrc,
-			srcset: ImageSrcset,
-			width: '650px',
-			classes:
-				'cmsvelte-mx-auto cmsvelte-block cmsvelte-w-full cmsvelte-h-auto cmsvelte-max-w-[720px]'
-		}
+		chartID: 'election-fraud',
+		Component: ElectionFraud
 	},
 	{
-		chartID: 'bar-chart',
-		Component: BarChart
+		chartID: 'covid-claims',
+		Component: CovidClaims
 	},
 	{
-		chartID: 'ai2html',
-		Component: AI2HTML
+		chartID: 'episode-ideology',
+		Component: EpisodeIdeology
 	}
+
 ];
 
 // add objects in the cmsFiles array to mimic styles and scripts in your CMS while developing. These scripts aren't included in production mode.
