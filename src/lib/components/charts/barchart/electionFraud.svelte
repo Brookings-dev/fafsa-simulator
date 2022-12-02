@@ -10,6 +10,7 @@
 	import AxisY from './AxisY.svelte';
 
 	import data from '$lib/data/election_fraud_data.csv';
+	import { construct_svelte_component } from 'svelte/internal';
 
 	const xKey = (d) => d3.timeParse('%Y-%V')(d.date);
 	const formatXkey = d3.timeFormat();
@@ -35,23 +36,40 @@
 		x={xKey}
 		y={yKey}
 		z={zKey}
-		xScale={scaleBand().paddingInner([0.05]).round(true)}
+		xScale={scaleBand().paddingInner([0.2]).round(true)}
 		xDomain={xKey}
 		yDomain={[0, 80]}
 		{data}
 	>
 		<Svg>
 			<AxisX
+				id="axis-week"
 				gridlines={false}
+				fontColor="#333333"
+				label="Week"
 				formatTick={(tick) =>
 					d3.timeFormat('%V')(tick) % 2 == 0 || d3.timeFormat('%V')(tick) == '01'
 						? d3.timeFormat('%V')(tick)
 						: ''}
 			/>
+			<AxisX
+				gridlines={false}
+				baseline={false}
+				yTick="35"
+				label="Year"
+				fontColor="#707070"
+				fontSize=".75rem"
+				formatTick={(tick) =>
+					tick == 'Mon Aug 17 2020 00:00:00 GMT-0400 (Eastern Daylight Time)' ||
+					tick == 'Mon Jan 04 2021 00:00:00 GMT-0500 (Eastern Standard Time)'
+						? d3.timeFormat('%Y')(tick)
+						: ''}
+			/>
 			<AxisY
 				gridlines={true}
+				textAnchor="end"
 				dyTick="4"
-				dxTick="-7"
+				xTick="-6"
 				formatTick={(tick) => (tick !== 0 ? `${tick}%` : tick)}
 			/>
 			<Bar />

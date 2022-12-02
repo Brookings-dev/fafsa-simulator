@@ -4,7 +4,7 @@
  -->
 <script>
 	import { getContext } from 'svelte';
-	const { width, height, xScale, yRange } = getContext('LayerCake');
+	const { width, height, xScale, yRange, yScale } = getContext('LayerCake');
 
 	/** @type {Boolean} [gridlines=true] - Extend lines from the ticks into the chart space */
 	export let gridlines = true;
@@ -29,6 +29,15 @@
 
 	/** @type {Number} [yTick=16] - The distance from the baseline to place each tick value. */
 	export let yTick = 16;
+
+	/** @type {String} [label=''] - Show a label at the top of the y axis. */
+	export let label = '';
+
+	/** @type {String} [fontColor=''] - Change color of font color in label. */
+	export let fontColor = 'black';
+
+	/** @type {String} [fontSize=''] - Change size of font in label. */
+	export let fontSize = '0.875rem';
 
 	$: isBandwidth = typeof $xScale.bandwidth === 'function';
 
@@ -73,10 +82,22 @@
 				y={yTick}
 				dx=""
 				dy=""
+				style="font-size: {fontSize}; fill: {fontColor}"
 				text-anchor={textAnchor(i)}>{formatTick(tick)}</text
 			>
+			<text
+				class="fill-black-light text-xs sm:text-sm font-sans"
+				x={isBandwidth ? $xScale.bandwidth() : 0}
+				y={yTick}
+				dx="15"
+				style="text-anchor:{isBandwidth
+					? 'start'
+					: textAnchor}; font-size: {fontSize}; fill: {fontColor}"
+				>{`${label && i === tickVals.length - 1 ? label : ''}`}
+			</text>
 		</g>
 	{/each}
+
 	{#if baseline === true}
 		<line class="baseline" y1={$height + 0.5} y2={$height + 0.5} x1="0" x2={$width} />
 	{/if}

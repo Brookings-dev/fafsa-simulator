@@ -87,12 +87,15 @@
 		@apply cmsvelte-stroke-gray-300;
 	}
 	.tick .gridline {
-		stroke-dasharray: 2;
+		stroke-dasharray: 0.3, 10;
+		stroke-linecap: round;
+		stroke-width: 2;
 	}
 	.tick text {
 		@apply cmsvelte-fill-gray-500;
 	}
 	.tick.tick-0 line {
 		stroke-dasharray: 0;
+		stroke: #333333;
 	}
 </style>
