@@ -119,4 +119,7 @@
 	.tick.tick-0 line {
 		stroke-dasharray: 0;
 	}
+	.baseline {
+		@apply cmsvelte-stroke-black;
+	}
 </style>

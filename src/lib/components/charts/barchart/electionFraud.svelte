@@ -9,7 +9,8 @@
 	import AxisX from './AxisX.svelte';
 	import AxisY from './AxisY.svelte';
 
-	import data from '$lib/data/election_fraud_data.csv';
+	import data from '$lib/data/election_fraud.csv';
+	import dataNew from '$lib/data/episodes-per-month-ideology-interactive.csv';
 	import { construct_svelte_component } from 'svelte/internal';
 
 	const xKey = (d) => d3.timeParse('%Y-%V')(d.date);
@@ -22,9 +23,8 @@
 	const parseDateYearMonth = d3.timeParse('%Y-%m'); //parse 2012-03....YEAR_MONTH
 	const formatDateMonthYear = d3.timeFormat('%b-%Y'); //Jan-2021
 	const formatDateWeek = d3.timeFormat('%V'); //42
-	////////
-	// let fillElection = (d) => (d.after_election == 'after' ? '#5EAEF3' : '#0D659D');
 
+	////////
 	data.forEach((d) => {
 		d[yKey] = +d[yKey];
 	});
@@ -53,6 +53,7 @@
 						: ''}
 			/>
 			<AxisX
+				id="axis-year"
 				gridlines={false}
 				baseline={false}
 				yTick="35"
