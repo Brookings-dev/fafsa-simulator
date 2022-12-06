@@ -18,14 +18,7 @@
 	// console.log(dataNew[2]);
 	console.log(data[2]);
 
-	///
-	const parseDateYearWeek = d3.timeParse('%Y-%U'); //parse 2012-23....YEAR_WEEK
-	const parseDateYearMonth = d3.timeParse('%Y-%m'); //parse 2012-03....YEAR_MONTH
-	const formatDateMonthYear = d3.timeFormat('%b-%Y'); //Jan-2021
-	const formatDateWeek = d3.timeFormat('%U'); //42
-
 	const xKey = 'month_year';
-	// const xKey = (d) => d3.timeParse('%Y-%V')(d.month_year);
 	const yKey = [0, 1];
 	const zKey = 'key';
 

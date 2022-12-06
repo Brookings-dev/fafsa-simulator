@@ -2,9 +2,9 @@
 	"google": {
 		"sheet": [
 			{
-				"id": "",
+				"id": "15UT9WEmG2Zu9FgRLwf24qSROMau9yLvZvRTE4sS84DY",
 				"gid": "0",
-				"filepath": "src/lib/data/data.csv"
+				"filepath": "src/lib/data/covid-claims.csv"
 			}
 		],
 		"doc": [

@@ -73,6 +73,8 @@
 	},
 	"dependencies": {
 		"archieml": "^0.5.0",
+		"fetch": "^1.1.0",
+		"google-spreadsheet": "^3.3.0",
 		"html-entities": "^2.3.3",
 		"htmlparser2": "^8.0.1",
 		"node-fetch": "^3.3.0"
