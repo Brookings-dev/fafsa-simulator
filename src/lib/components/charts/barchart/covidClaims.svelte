@@ -63,11 +63,12 @@
 <div class="cmsvelte-w-full" style:height="400px">
 	<!-- <div class="chart-container"> -->
 	<LayerCake
-		padding={{ top: 0, right: 0, bottom: 0, left: 0 }}
+		padding={{ top: 0, right: 0, bottom: 20, left: 20 }}
 		x={(d) => d.data[xKey]}
 		y={yKey}
 		z={zKey}
 		xScale={scaleBand().paddingInner([0.12]).round(true)}
+		yDomain={[0,25]}
 		xDomain={uniques(data, xKey)}
 		zScale={scaleOrdinal()}
 		zDomain={seriesNames}
@@ -77,7 +78,7 @@
 	>
 		<Svg>
 			<AxisX gridlines={false} formatTick={formatTickX} />
-			<AxisY ticks={4} gridlines={true} />
+			<AxisY ticks={4} gridlines={true} textAnchor="end" dyTick="4" xTick="-6" />
 			<ColumnStacked />
 		</Svg>
 	</LayerCake>

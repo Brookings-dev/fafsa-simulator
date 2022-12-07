@@ -105,21 +105,24 @@
 
 <style lang="postcss">
 	.tick {
-		@apply cmsvelte-font-mono cmsvelte-font-thin cmsvelte-text-sm;
+		font-family: Roboto;
+		color: #333333;
 	}
 	.tick line {
-		@apply cmsvelte-stroke-gray-300;
+		fill: #333333;
 	}
 	.tick .gridline {
 		stroke-dasharray: 2;
 	}
 	.tick text {
-		@apply cmsvelte-fill-gray-500;
+		color: #333333;
+		font-size: small;
+		font-weight: 600;
 	}
 	.tick.tick-0 line {
 		stroke-dasharray: 0;
 	}
 	.baseline {
-		@apply cmsvelte-stroke-black;
+		stroke: #333333;
 	}
 </style>

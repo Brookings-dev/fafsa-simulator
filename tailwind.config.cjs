@@ -24,6 +24,9 @@ module.exports = {
 			'7xl': ['4.5rem'],
 			'8xl': ['6rem'],
 			'9xl': ['8rem']
+		},
+		fontFamily: {
+			display: ['Roboto', 'sans-serif']
 		}
 	}
 };

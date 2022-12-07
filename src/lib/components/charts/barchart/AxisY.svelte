@@ -81,7 +81,7 @@
 
 <style lang="postcss">
 	.tick {
-		@apply cmsvelte-font-mono cmsvelte-font-thin cmsvelte-text-sm;
+		font-family: Roboto;
 	}
 	.tick line {
 		@apply cmsvelte-stroke-gray-300;
@@ -92,7 +92,9 @@
 		stroke-width: 2;
 	}
 	.tick text {
-		@apply cmsvelte-fill-gray-500;
+		color: #333333;
+		font-size: small;
+		font-weight: 600;
 	}
 	.tick.tick-0 line {
 		stroke-dasharray: 0;
