@@ -16,8 +16,8 @@
 
 	import data from '$lib/data/covid-claims.csv';
 	import data2 from '$lib/data/covid_data_new.csv';
-	console.log(data[0]);
-	console.log(data2[0]);
+	// console.log(data[0]);
+	// console.log(data2[0]);
 
 	///
 	const parseDateYearWeek = d3.timeParse('%Y-%U'); //parse 2012-23....YEAR_WEEK
