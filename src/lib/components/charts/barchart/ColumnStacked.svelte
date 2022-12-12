@@ -6,6 +6,8 @@
 	import { getContext } from 'svelte';
 
 	const { data, xGet, yGet, zGet, xScale } = getContext('LayerCake');
+
+
 </script>
 
 <g class="column-group">
@@ -25,3 +27,9 @@
 		{/each}
 	{/each}
 </g>
+
+<style>
+	.column-group rect {
+   		transition: all 1s;
+	}
+</style>

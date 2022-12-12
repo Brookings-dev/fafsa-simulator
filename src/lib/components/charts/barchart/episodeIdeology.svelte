@@ -3,16 +3,15 @@
 	// https://layercake.graphics/example/Bar/
 	import { LayerCake, Svg, flatten, uniques } from 'layercake';
 	import { scaleBand, scaleOrdinal } from 'd3-scale';
-	import * as d3 from 'd3';
-	import { stack, stackOrderAppearance, stackOrderNone } from 'd3-shape';
-	import { format, precisionFixed } from 'd3-format';
+	import { timeFormat, timeParse } from 'd3';
+	import { stack, stackOrderReverse } from 'd3-shape';
+	import { tweened } from 'svelte/motion';
+	import * as eases from 'svelte/easing';
 
 	import ColumnStacked from './ColumnStacked.svelte';
 	import AxisX from './AxisX.svelte';
 	import AxisY from './AxisY.svelte';
 
-	// import DateRangeSelect from 'svelte-date-range-select';
-	import DoubleRangeSlider from '$lib/components/helpers/doubleRangeSlider.svelte';
 	import DateRangeSelect from '$lib/components/helpers/DateRangeSelect.svelte';
 
 	// This example loads csv data as json using @rollup/plugin-dsv
@@ -34,61 +33,61 @@
 		});
 	});
 
-	const stackData = stack().keys(seriesNames).order(d3.stackOrderReverse);
+	const stackData = stack().keys(seriesNames).order(stackOrderReverse);
 	$: series = stackData(filteredData);
 	// x={(d) => d.data[xKey]}
 
 	/// date range
-	const name = 'createdDate'; 
+	const name = 'createdDate';
 
-  const heading = 'Created Date';
+	const heading = 'Created Date';
 
-  // this limits the HTML5 date picker end date - e.g. today is used here 
-  const endDateMax = new Date();
+	// option to override the defaults - change to other language, below are the default values
+	const labels = {
+		notSet: 'not set',
+		greaterThan: 'greater than',
+		lessThan: 'less than',
+		range: 'range',
+		day: 'day',
+		days: 'days',
+		apply: 'Apply'
+	};
 
-  // this limits the HTML5 date picker's start date - e.g. 3 years is select here
-  const startDateMin = new Date(
-    new Date().setFullYear(endDateMax.getFullYear(), endDateMax.getMonth() - 36)
-  );
+	// form post ids
+	const startDateId = 'start_date_id';
+	const endDateId = 'end_date_id';
 
-  // option to override the defaults - change to other language, below are the default values
-  const labels = {
-    notSet: 'not set',
-    greaterThan: 'greater than',
-    lessThan: 'less than',
-    range: 'range',
-    // day: 'day',
-    // days: 'days',
-    apply: 'Apply'
-  }
+	function handleApplyDateRange(thisDate) {
+		let start = timeFormat('%Y-%m')(timeParse('%Y-%m')(thisDate.detail.startDate));
+		let end = timeFormat('%Y-%m')(timeParse('%Y-%m')(thisDate.detail.endDate));
+		const timeout = setTimeout(() => {
+			filteredData = data.filter((d) => d.month_year >= start && d.month_year <= end);
+		}, 200);
+	}
 
-  // form post ids
-  const startDateId = 'start_date_id' 
-  const endDateId = 'end_date_id' 
+	// this is if you want the scales to update too
+	// const tweenOptions = {
+	// 	duration: 300,
+	// 	easing: eases.cubicInOut
+	// 	};
 
-  function handleApplyDateRange(thisDate){
-	let start = d3.timeFormat('%Y-%m')(d3.timeParse('%Y-%m')(thisDate.detail.startDate));
-	let end =  d3.timeFormat('%Y-%m')(d3.timeParse('%Y-%m')(thisDate.detail.endDate))
-	filteredData = data.filter(d => d.month_year >= start && d.month_year <= end)
-  }
-
+	// $: xDomain = tweened(undefined, tweenOptions);
+	// $: yDomain = tweened(undefined, tweenOptions);
 </script>
+
 <div>
-		
-
-
-<DateRangeSelect
-	--applyButtonWidth= '100px'
-    startDateMin = '2012-12'
-    endDateMax = '2021-12'
-    {name}
-    {heading}
-    {labels}
-    {startDateId}
-    {endDateId}
-    on:onApplyDateRange={handleApplyDateRange} /></div>
-
-
+	<DateRangeSelect
+		--applyButtonWidth="100px"
+		startDateMin="2012-12"
+		endDateMax="2021-12"
+		{name}
+		{heading}
+		{labels}
+		{startDateId}
+		{endDateId}
+		on:onApplyDateRange={handleApplyDateRange}
+	/>
+</div>
 
 <div class="cmsvelte-w-full" style:height="400px">
 	<!-- <div class="chart-container"> -->
@@ -99,7 +98,7 @@
 		z={zKey}
 		xScale={scaleBand().paddingInner([0.12]).round(true)}
 		xDomain={null}
-		yDomain={[0,1200]}
+		yDomain={[0, 1200]}
 		zScale={scaleOrdinal()}
 		zDomain={seriesNames}
 		zRange={seriesColors}
@@ -112,9 +111,9 @@
 				baseline={true}
 				fontColor="#333333"
 				formatTick={(tick) =>
-					d3.timeFormat('%b')(d3.timeParse('%Y-%m')(tick)) == 'Jan' ||
-					d3.timeFormat('%b %Y')(d3.timeParse('%Y-%m')(tick)) == 'Dec 2021'
-						? d3.timeFormat('%b %Y')(d3.timeParse('%Y-%m')(tick))
+					timeFormat('%b')(timeParse('%Y-%m')(tick)) == 'Jan' ||
+					timeFormat('%b %Y')(timeParse('%Y-%m')(tick)) == 'Dec 2021'
+						? timeFormat('%b %Y')(timeParse('%Y-%m')(tick))
 						: ''}
 			/>
 			<AxisY ticks={4} gridlines={true} textAnchor="end" dyTick="4" xTick="-6" />
