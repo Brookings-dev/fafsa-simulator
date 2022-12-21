@@ -5,6 +5,11 @@
 				"id": "15UT9WEmG2Zu9FgRLwf24qSROMau9yLvZvRTE4sS84DY",
 				"gid": "0",
 				"filepath": "src/lib/data/covid-claims.csv"
+			},
+			{
+				"id": "1bYOkc8ji8LWkrQHd-cZqRySCvbf0utph0-RT-6A6Zsw",
+				"gid": "0",
+				"filepath": "src/lib/data/ideology.csv"
 			}
 		],
 		"doc": [

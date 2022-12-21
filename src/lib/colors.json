@@ -1,0 +1,21 @@
+{
+    "bi-red": {
+        "DEFAULT" : "#F55D5B"
+    },
+    "bi-gray": {
+        "light" : "#E6E6E6",
+        "DEFAULT" : "#B3B3B3"
+    },
+    "bi-yellow": {
+        "DEFAULT" : "#FDDB46"
+    },
+    "bi-blue": {
+        "DEFAULT" : "#16659D"
+    },
+    "black": {
+        "DEFAULT" : "#000000"
+    },
+    "white": {
+        "DEFAULT" : "#FFFFFF"
+    }
+}

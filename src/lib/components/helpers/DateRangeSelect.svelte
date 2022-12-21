@@ -36,7 +36,7 @@
 	let lessThan = false;
 	let greaterThan = false;
 
-	$: console.log(sliderStartTimestamp);
+	// $: console.log(sliderStartTimestamp);
 
 	function dateOrSliderChange(item) {
 		if (item == 'endDate' && endDate && endDate < startDate) startDate = endDate;
@@ -76,7 +76,7 @@
 		if (date) return new Date(date).toJSON().slice(0, 7);
 		return undefined;
 	}
-	console.log(new Date(startDateMin).valueOf());
+	// console.log(new Date(startDateMin).valueOf());
 	function dateToTimeStamp(date) {
 		if (date) return new Date(date).valueOf();
 		return undefined;
@@ -91,8 +91,8 @@
 	};
 </script>
 
-<div class="cmsvelte-grid cmsvelte-grid-cols-3">
-	<div class="cmsvelte-grid">
+<div class="grid grid-cols-3 items-center gap-y-2">
+	<div class="grid">
 		<h1>From:</h1>
 		<input
 			type="month"
@@ -119,7 +119,7 @@
 			}}
 		/>
 	</div>
-	<div class="cmsvelte-grid">
+	<div class="grid">
 		<h1>To:</h1>
 		<input
 			type="month"
@@ -145,7 +145,7 @@
 			}}
 		/>
 	</div>
-	<div class="cmsvelte-grid">
+	<div class="grid">
 		<button class="applyButton" on:click={apply} title={labels.apply}>
 			{labels.apply}
 		</button>

@@ -84,7 +84,7 @@
 		font-family: Roboto;
 	}
 	.tick line {
-		@apply cmsvelte-stroke-gray-300;
+		@apply stroke-gray-300;
 	}
 	.tick .gridline {
 		stroke-dasharray: 0.3, 10;

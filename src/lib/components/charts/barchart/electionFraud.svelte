@@ -30,7 +30,7 @@
 	});
 </script>
 
-<div class="cmsvelte-w-full" style:height="400px">
+<div class="w-full" style:height="400px">
 	<LayerCake
 		padding={{ top: 0, right: 42, bottom: 0, left: 5 }}
 		x={xKey}

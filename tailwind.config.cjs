@@ -1,7 +1,22 @@
 module.exports = {
-	prefix: 'cmsvelte-',
+	// prefix: 'cmsvelte-',
+	important: true,
 	content: ['./src/**/*.{html,js,svelte,ts}', './src/lib/data/copy.json', './index.html'],
-	plugins: [],
+	plugins: [require('@tailwindcss/typography')],
+	safelist: [
+		'bg-bi-red',
+		'bg-bi-yellow',
+		'bg-bi-gray',
+		'bg-bi-blue',
+		'border-bi-gray-light',
+		'bg-bi-gray-light',
+		'fill-bi-blue',
+		'bg-[#16659D]',
+		'bg-[#FDDB46]',
+		'bg-[#B3B3B3]',
+		'bg-[#F55D5B]',
+		'peer-checked:bg-[#16659D]'
+	  ],
 	theme: {
 		screens: {
 			sm: '640px',
@@ -27,6 +42,9 @@ module.exports = {
 		},
 		fontFamily: {
 			display: ['Roboto', 'sans-serif']
+		},
+		extend: {
+			colors: require('./src/lib/colors.json')
 		}
 	}
 };

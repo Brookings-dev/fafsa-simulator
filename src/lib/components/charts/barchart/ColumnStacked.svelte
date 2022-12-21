@@ -4,10 +4,13 @@
  -->
 <script>
 	import { getContext } from 'svelte';
+	import getKeyColor from '$lib/keyLookup';
 
 	const { data, xGet, yGet, zGet, xScale } = getContext('LayerCake');
 
-
+	/** @type {Function} [formatTick=d => d] - A function that passes the current tick value and expects a nicely formatted value in return. */
+	export let getFill = (d) => d;
+	// console.log(getKeyColor('Moderate'));
 </script>
 
 <g class="column-group">
@@ -15,6 +18,10 @@
 		{#each series as d}
 			{@const yVals = $yGet(d)}
 			{@const columnHeight = yVals[0] - yVals[1]}
+			{@const keys = (key) => d['data'][key]}
+			<!-- {@const parse = JSON.stringify(newData)} -->
+			<!-- {@const key = Object.entries(d.data).map(([key, value]) => key)} -->
+			<!-- {#each newData as [label, { key, value }]} -->
 			<rect
 				class="group-rect"
 				data-id={i}
@@ -28,8 +35,9 @@
 	{/each}
 </g>
 
+<!-- fill={$zGet(series)} -->
 <style>
 	.column-group rect {
-   		transition: all 1s;
+		transition: all 1s;
 	}
 </style>

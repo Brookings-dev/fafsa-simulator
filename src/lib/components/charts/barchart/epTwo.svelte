@@ -3,7 +3,7 @@
 	// https://layercake.graphics/example/Bar/
 	import { LayerCake, Svg, flatten, uniques } from 'layercake';
 	import { scaleBand, scaleOrdinal } from 'd3-scale';
-	import { ascending, color, filter, timeFormat, timeParse } from 'd3';
+	import { color, filter, timeFormat, timeParse } from 'd3';
 	import { stack, stackOrderReverse } from 'd3-shape';
 	import ColumnStacked from './ColumnStacked.svelte';
 	import AxisX from './AxisX.svelte';
@@ -11,26 +11,19 @@
 
 	import DateRangeSelect from '$lib/components/helpers/DateRangeSelect.svelte';
 
-	import getKeyColor from '$lib/keyLookup';
-
 	// This example loads csv data as json using @rollup/plugin-dsv
 	// import data from '$lib/data/election_fraud_data.csv';
 	import data from '$lib/data/ideology.csv';
 
 	let filteredData = data;
-	let fill;
 
 	let options = filteredData.map((option) => {
 		return {
 			month_year: option.month_year,
-			'More Conservative': {
-				order: 1,
-				value: option['More Conservative'],
-				color: '#F55D5B'
-			},
-			'More Liberal': { order: 2, value: option['More Liberal'], color: '#16659D' },
-			Moderate: { order: 3, value: option.Moderate, color: '#FDDB46' },
-			Unknown: { order: 4, value: option.Unknown, color: '#B3B3B3' }
+			'More Conservative': { value: option['More Conservative'], color: '#F55D5B' },
+			'More Liberal': { value: option['More Liberal'], color: '#16659D' },
+			Moderate: { value: option.Moderate, color: '#FDDB46' },
+			Unknown: { value: option.Unknown, color: '#B3B3B3' }
 		};
 	});
 
@@ -39,13 +32,14 @@
 	const zKey = 'key';
 
 	$: seriesNames = Object.keys(filteredData[0]).filter((d) => d !== xKey);
-	$: chosenValues = seriesNames;
 
-	$: seriesColors = ['#F55D5B', '#16659D', '#FDDB46', '#B3B3B3'];
+	$: chosenValues = Object.keys(filteredData[0]).filter((d) => d !== xKey);
+
+	const seriesColors = ['#F55D5B', '#16659D', '#FDDB46', '#B3B3B3'];
 	// console.log(seriesColors);
 
 	$: options.forEach((d) => {
-		chosenValues.forEach((name) => {
+		seriesNames.forEach((name) => {
 			name = +name;
 		});
 	});
@@ -56,6 +50,7 @@
 		.value((obj, key) => obj[key]['value']);
 
 	$: series = stackData(options);
+	// console.log(series);
 
 	/// date range
 	const name = 'createdDate';
@@ -80,50 +75,22 @@
 	const handleApplyDateRange = (thisDate) => {
 		let start = timeFormat('%Y-%m')(timeParse('%Y-%m')(thisDate.detail.startDate));
 		let end = timeFormat('%Y-%m')(timeParse('%Y-%m')(thisDate.detail.endDate));
+		console.log(end);
 		const timeout = setTimeout(() => {
-			options = filteredData
-				.map((option) => {
-					return {
-						month_year: option.month_year,
-						'More Conservative': { value: option['More Conservative'], color: '#F55D5B' },
-						'More Liberal': { value: option['More Liberal'], color: '#16659D' },
-						Moderate: { value: option.Moderate, color: '#FDDB46' },
-						Unknown: { value: option.Unknown, color: '#B3B3B3' }
-					};
-				})
-				.filter((d) => d.month_year >= start && d.month_year <= end);
+			options = options.filter((d) => d.month_year >= start && d.month_year <= end);
 		}, 200);
 	};
 
-	const handleChange = (event) => {
-		let { checked, value, name } = event.target,
-			orderingValue = {}, // map for efficient lookup of sortIndex
-			sortOrderValue = ['More Conservative', 'More Liberal', 'Moderate', 'Unknown'],
-			orderingColor = {},
-			sortOrderColor = ['#F55D5B', '#16659D', '#FDDB46', '#B3B3B3'];
-
-		fill = getKeyColor(value);
-
+	let handleChange = (ev) => {
+		let { checked, value } = ev.target;
 		if (checked) {
 			chosenValues = [...chosenValues, value];
-			seriesColors = [...seriesColors, fill];
-			///sort values
-			for (let i = 0; i < sortOrderValue.length; i++) orderingValue[sortOrderValue[i]] = i;
-			chosenValues.sort(function (a, b) {
-				return orderingValue[a] - orderingValue[b];
-			});
-			//sort fills
-			for (let i = 0; i < sortOrderColor.length; i++) orderingColor[sortOrderColor[i]] = i;
-			seriesColors.sort(function (a, b) {
-				return orderingColor[a] - orderingColor[b];
-			});
 		} else {
 			chosenValues = chosenValues.filter((v) => v !== value);
-			seriesColors = seriesColors.filter((v) => v !== fill);
 		}
-		console.log(chosenValues + ' : ' + seriesColors);
 	};
 
+	$: console.log(chosenValues);
 	// this is if you want the scales to update too
 	// const tweenOptions = {
 	// 	duration: 300,
@@ -135,37 +102,36 @@
 </script>
 
 <div>
-	<div class="flex flex-row justify-between items-center">
-		<div class="flex flex-row gap-2 flex-1">
-			{#each Object.entries(options[0]) as [value, { color, order }]}
-				{#if value !== 'month_year'}
-					<div>
-						<input
-							type="checkbox"
-							class="select-items self-center justify-self-center appearance-none"
-							name={order}
-							{value}
-							{order}
-							id={value}
-							checked={chosenValues.includes(value)}
-							on:change={handleChange}
-						/>
-						<label
-							class="grid grid-flow-row-dense peer border border-solid justify-center cursor-pointer hover:bg-bi-gray-light peer-checked:border-bi-gray-light peer-checked:bg-[{color}]"
-							for={value}
+	<!-- {#each seriesNames as variable}
+		<div class="cmsvelte-grid cmsvelte-grid-col cmsvelte-p-5 cmsvelte-stroke">{variable}</div>
+	{/each} -->
+	<div class="cmsvelte-flex cmsvelte-flex-row cmsvelte-justify-between cmsvelte-items-center">
+		<div class="cmsvelte-flex cmsvelte-flex-row cmsvelte-gap-2 cmsvelte-flex-1">
+			{#each seriesNames as value}
+				<div>
+					<input
+						type="checkbox"
+						class="cmsvelte-select-items cmsvelte-self-center cmsvelte-peer cmsvelte-justify-self-center cmsvelte-appearance-none"
+						name={value}
+						{value}
+						id={value}
+						checked={chosenValues.includes(value)}
+						on:change={handleChange}
+					/>
+					<label
+						class="cmsvelte-grid cmsvelte-grid-flow-row-dense cmsvelte-border cmsvelte-border-solid cmsvelte-border-gray cmsvelte-justify-center cmsvelte-cursor-pointer hover:cmsvelte-bg-gray-light peer-checked:bg-gray-light cmsvelte-peer-checked:border-black"
+						for={value}
+					>
+						<p
+							class="cmsvelte-text-xs cmsvelte-self-center cmsvelte-justify-self-center cmsvelte-text-center cmsvelte-peer-checked:cmsvelte-bg-gray-light cmsvelte-p-2 cmsvelte-border"
 						>
-							<div class="flex flex-row justify-between items-center p-[1px]">
-								<div class="w-3 h-3 peer-checked:bg-bi-gray-light bg-[{color}] m-1" for={value} />
-								<p class="text-xs self-center justify-self-center text-center p-1">
-									{value}
-								</p>
-							</div>
-						</label>
-					</div>
-				{/if}
+							{value}
+						</p>
+					</label>
+				</div>
 			{/each}
 		</div>
-		<div class="flex flex-row gap-2 flex-1">
+		<div class="cmsvelte-flex cmsvelte-flex-row cmsvelte-gap-2 cmsvelte-flex-1">
 			<DateRangeSelect
 				--applyButtonWidth="100px"
 				startDateMin="2012-12"
@@ -181,9 +147,8 @@
 	</div>
 </div>
 
-<div class="w-full" style:height="400px">
+<div class="cmsvelte-w-full" style:height="400px">
 	<!-- <div class="chart-container"> -->
-
 	<LayerCake
 		padding={{ top: 20, right: 0, bottom: 20, left: 20 }}
 		x={(d) => d.data[xKey]}

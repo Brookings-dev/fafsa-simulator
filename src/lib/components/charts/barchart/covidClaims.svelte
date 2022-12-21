@@ -60,7 +60,7 @@
 			: '';
 </script>
 
-<div class="cmsvelte-w-full" style:height="400px">
+<div class="w-full" style:height="400px">
 	<!-- <div class="chart-container"> -->
 	<LayerCake
 		padding={{ top: 0, right: 0, bottom: 20, left: 20 }}
@@ -68,7 +68,7 @@
 		y={yKey}
 		z={zKey}
 		xScale={scaleBand().paddingInner([0.12]).round(true)}
-		yDomain={[0,25]}
+		yDomain={[0, 25]}
 		xDomain={uniques(data, xKey)}
 		zScale={scaleOrdinal()}
 		zDomain={seriesNames}
