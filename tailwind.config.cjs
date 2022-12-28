@@ -15,7 +15,12 @@ module.exports = {
 		'bg-[#FDDB46]',
 		'bg-[#B3B3B3]',
 		'bg-[#F55D5B]',
-		'peer-checked:bg-[#16659D]'
+		'bg-[#00649f]',
+		'bg-[#8BC6FD]',
+		'bg-[#2FA5B2]',
+		'bg-[#FEDB31]',
+		'bg-[#C7A70A]',
+		'bg-[#F25D00]'
 	  ],
 	theme: {
 		screens: {
@@ -41,7 +46,7 @@ module.exports = {
 			'9xl': ['8rem']
 		},
 		fontFamily: {
-			display: ['Roboto', 'sans-serif']
+			sans: ['Roboto', 'sans-serif']
 		},
 		extend: {
 			colors: require('./src/lib/colors.json')

@@ -93,13 +93,14 @@
 
 <div class="grid grid-cols-3 items-center gap-y-2">
 	<div class="grid">
-		<h1>From:</h1>
+		<h1 class="text-sm">From:</h1>
 		<input
 			type="month"
 			id={startDateId}
 			class="dateSelect"
 			min={startDateMinRfc}
 			max={endDateMaxRfc}
+			required="required"
 			bind:value={startDate}
 			on:input={() => {
 				dateOrSliderChange('startDate');
@@ -120,7 +121,7 @@
 		/>
 	</div>
 	<div class="grid">
-		<h1>To:</h1>
+		<h1 class="text-sm">To:</h1>
 		<input
 			type="month"
 			id={endDateId}
@@ -160,7 +161,10 @@
 		height: var(--applyButtonHeight, 25px);
 		background-color: var(--applyButtonBackgroundColor, #007bff);
 		color: var(--applyButtonColor, #fff);
-		padding: var(--applyButtonPadding, 0px);
+		padding: var(--applyButtonPadding, 0.5px);
+		margin: 10px;
+		font-family: roboto;
+		font-size: 0.825em;
 	}
 	.sliderEnd {
 		background: var(--sliderEndBackgroundColor, #007bff);
@@ -180,9 +184,19 @@
 		color: var(--dateSelectColor, #000);
 		font-size: var(--dateSelectFontSize, 0.825em);
 		font-weight: var(--dateSelectFontWeight, 300);
+		font-family: roboto;
 		height: var(--dateSelectHeight, 34px);
 		width: var(--dateSelectWidth, 122px);
 		margin-bottom: var(--dateSelectMarginBottom, 5px);
+	}
+	input[type='month']::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		display: none;
+	}
+	input[type='month']::-webkit-calendar-picker-indicator {
+		cursor: pointer;
+		/* display: none;
+		-webkit-appearance: none; */
 	}
 	/* .text-blue-600 {
 		color: blueviolet;

@@ -10,6 +10,11 @@
 				"id": "1bYOkc8ji8LWkrQHd-cZqRySCvbf0utph0-RT-6A6Zsw",
 				"gid": "0",
 				"filepath": "src/lib/data/ideology.csv"
+			},
+			{
+				"id": "1Lj2-McIb0v4u_XrfoNgZ9MFHMB5oKSvGD6KbPIQF_cY",
+				"gid": "0",
+				"filepath": "src/lib/data/election-fraud.csv"
 			}
 		],
 		"doc": [

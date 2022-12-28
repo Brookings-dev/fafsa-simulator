@@ -81,7 +81,8 @@
 
 <style lang="postcss">
 	.tick {
-		font-family: Roboto;
+		font-family: roboto, sans-serif;
+		font-weight: 400;
 	}
 	.tick line {
 		@apply stroke-gray-300;
@@ -94,7 +95,7 @@
 	.tick text {
 		color: #333333;
 		font-size: small;
-		font-weight: 600;
+		/* font-weight: 600; */
 	}
 	.tick.tick-0 line {
 		stroke-dasharray: 0;

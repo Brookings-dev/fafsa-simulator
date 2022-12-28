@@ -3,8 +3,10 @@
 	// https://layercake.graphics/example/Bar/
 	import { LayerCake, Svg, flatten, uniques } from 'layercake';
 	import { scaleBand, scaleOrdinal } from 'd3-scale';
-	import { ascending, color, filter, timeFormat, timeParse } from 'd3';
+	import { timeFormat, timeParse } from 'd3';
 	import { stack, stackOrderReverse } from 'd3-shape';
+	import { tweened } from 'svelte/motion';
+	import * as eases from 'svelte/easing';
 	import ColumnStacked from './ColumnStacked.svelte';
 	import AxisX from './AxisX.svelte';
 	import AxisY from './AxisY.svelte';
@@ -17,9 +19,13 @@
 	// import data from '$lib/data/election_fraud_data.csv';
 	import data from '$lib/data/ideology.csv';
 
+	const yKey = [0, 1];
+	const zKey = 'key';
+
 	let filteredData = data;
 	let fill;
-
+	let xKey = 'month_year';
+	// console.log(filteredData);
 	let options = filteredData.map((option) => {
 		return {
 			month_year: option.month_year,
@@ -34,21 +40,10 @@
 		};
 	});
 
-	const xKey = 'month_year';
-	const yKey = [0, 1];
-	const zKey = 'key';
-
 	$: seriesNames = Object.keys(filteredData[0]).filter((d) => d !== xKey);
 	$: chosenValues = seriesNames;
 
 	$: seriesColors = ['#F55D5B', '#16659D', '#FDDB46', '#B3B3B3'];
-	// console.log(seriesColors);
-
-	$: options.forEach((d) => {
-		chosenValues.forEach((name) => {
-			name = +name;
-		});
-	});
 
 	$: stackData = stack()
 		.order(stackOrderReverse)
@@ -57,25 +52,7 @@
 
 	$: series = stackData(options);
 
-	/// date range
-	const name = 'createdDate';
-
-	const heading = 'Created Date';
-
-	// option to override the defaults - change to other language, below are the default values
-	const labels = {
-		notSet: 'not set',
-		greaterThan: 'greater than',
-		lessThan: 'less than',
-		range: 'range',
-		day: 'day',
-		days: 'days',
-		apply: 'Apply'
-	};
-
-	// form post ids
-	const startDateId = 'start_date_id';
-	const endDateId = 'end_date_id';
+	// console.log(options);
 
 	const handleApplyDateRange = (thisDate) => {
 		let start = timeFormat('%Y-%m')(timeParse('%Y-%m')(thisDate.detail.startDate));
@@ -96,7 +73,7 @@
 	};
 
 	const handleChange = (event) => {
-		let { checked, value, name } = event.target,
+		let { checked, value } = event.target,
 			orderingValue = {}, // map for efficient lookup of sortIndex
 			sortOrderValue = ['More Conservative', 'More Liberal', 'Moderate', 'Unknown'],
 			orderingColor = {},
@@ -121,14 +98,15 @@
 			chosenValues = chosenValues.filter((v) => v !== value);
 			seriesColors = seriesColors.filter((v) => v !== fill);
 		}
-		console.log(chosenValues + ' : ' + seriesColors);
 	};
+
+	// $: console.log(series);
 
 	// this is if you want the scales to update too
 	// const tweenOptions = {
 	// 	duration: 300,
 	// 	easing: eases.cubicInOut
-	// 	};
+	// };
 
 	// $: xDomain = tweened(undefined, tweenOptions);
 	// $: yDomain = tweened(undefined, tweenOptions);
@@ -137,6 +115,7 @@
 <div>
 	<div class="flex flex-row justify-between items-center">
 		<div class="flex flex-row gap-2 flex-1">
+			<!-- <ToggleSelection variables={Object.entries(options[0])} {handleChange} {xKey} /> -->
 			{#each Object.entries(options[0]) as [value, { color, order }]}
 				{#if value !== 'month_year'}
 					<div>
@@ -156,7 +135,7 @@
 						>
 							<div class="flex flex-row justify-between items-center p-[1px]">
 								<div class="w-3 h-3 peer-checked:bg-bi-gray-light bg-[{color}] m-1" for={value} />
-								<p class="text-xs self-center justify-self-center text-center p-1">
+								<p class="text-sm self-center justify-self-center text-center p-1">
 									{value}
 								</p>
 							</div>
@@ -165,16 +144,12 @@
 				{/if}
 			{/each}
 		</div>
-		<div class="flex flex-row gap-2 flex-1">
+		<div class="flex flex-row gap-2 flex-1 justify-end">
 			<DateRangeSelect
-				--applyButtonWidth="100px"
+				--applyButtonWidth="65px"
+				--applyButtonHeight="25px"
 				startDateMin="2012-12"
 				endDateMax="2021-12"
-				{name}
-				{heading}
-				{labels}
-				{startDateId}
-				{endDateId}
 				on:onApplyDateRange={handleApplyDateRange}
 			/>
 		</div>
@@ -209,7 +184,7 @@
 						? timeFormat('%b %Y')(timeParse('%Y-%m')(tick))
 						: ''}
 			/>
-			<AxisY ticks={4} gridlines={true} textAnchor="end" dyTick="4" xTick="-6" />
+			<AxisY ticks={6} gridlines={true} textAnchor="end" dyTick="4" xTick="-6" />
 			<ColumnStacked />
 		</Svg>
 	</LayerCake>
