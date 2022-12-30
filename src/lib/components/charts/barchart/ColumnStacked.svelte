@@ -4,13 +4,8 @@
  -->
 <script>
 	import { getContext } from 'svelte';
-	import getKeyColor from '$lib/keyLookup';
 
 	const { data, xGet, yGet, zGet, xScale } = getContext('LayerCake');
-
-	/** @type {Function} [formatTick=d => d] - A function that passes the current tick value and expects a nicely formatted value in return. */
-	export let getFill = (d) => d;
-	// console.log(getKeyColor('Moderate'));
 </script>
 
 <g class="column-group">

@@ -49,7 +49,6 @@
 			fill={d.after_election == 'after' ? '#0D659D' : '#5EAEF3'}
 			{stroke}
 			stroke-width={strokeWidth}
-			
 		/>
 		{#if showLabels && yValue}
 			<text x={xPos + colWidth / 2} y={$height - colHeight - 5} text-anchor="middle">{yValue}</text>
@@ -60,5 +59,8 @@
 <style>
 	text {
 		font-size: 12px;
+	}
+	.column-group rect {
+		transition: all 1s;
 	}
 </style>

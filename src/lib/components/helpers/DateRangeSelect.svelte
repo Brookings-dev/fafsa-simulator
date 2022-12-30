@@ -91,9 +91,9 @@
 	};
 </script>
 
-<div class="grid grid-cols-3 items-center gap-y-2">
+<div class="grid grid-flow-col gap-2 auto-cols-min items-center justify-end justify-items-end">
 	<div class="grid">
-		<h1 class="text-sm">From:</h1>
+		<!-- <h1 class="text-sm">From:</h1> -->
 		<input
 			type="month"
 			id={startDateId}
@@ -121,7 +121,7 @@
 		/>
 	</div>
 	<div class="grid">
-		<h1 class="text-sm">To:</h1>
+		<!-- <h1 class="text-sm">To:</h1> -->
 		<input
 			type="month"
 			id={endDateId}

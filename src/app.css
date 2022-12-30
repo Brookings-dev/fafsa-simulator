@@ -1,0 +1,35 @@
+.content-well {
+	max-width: 1000px;
+	margin: 0 auto;
+	margin-top: 60px;
+	margin-bottom: 20px;
+}
+.subtitle {
+	margin-top: 7px;
+}
+.filler-text {
+	margin-top: 70px;
+	margin-bottom: 70px;
+	font-size: 1rem;
+}
+.title-no-subtitle {
+	margin-bottom: 30px;
+}
+.footnote {
+	font-size: 0.75rem;
+	margin-bottom: 0px;
+	margin-top: 40px;
+}
+.footnote-second {
+	font-size: 0.75rem;
+	margin-bottom: 0px;
+	margin-top: 0px;
+}
+.footnote-asterisk {
+	font-size: 0.75rem;
+	margin-top: 75px;
+	margin-bottom: 10px;
+}
+.bolded {
+	font-weight: 700;
+}

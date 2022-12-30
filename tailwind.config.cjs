@@ -10,7 +10,20 @@ module.exports = {
 		'bg-bi-blue',
 		'border-bi-gray-light',
 		'bg-bi-gray-light',
+		'bg-bi-gray-xLight',
 		'fill-bi-blue',
+		'peer-checked:bg-bi-gray-dark',
+		'peer-checked:bg-[#16659D]',
+		'peer-checked:bg-[#FDDB46]',
+		'peer-checked:bg-[#B3B3B3]',
+		'peer-checked:bg-[#F55D5B]',
+		'peer-checked:bg-[#00649f]',
+		'peer-checked:bg-[#8BC6FD]',
+		'peer-checked:bg-[#2FA5B2]',
+		'peer-checked:bg-[#FEDB31]',
+		'peer-checked:bg-[#C7A70A]',
+		'peer-checked:bg-[#F25D00]',
+		'first:bg-bi-gray-dark',
 		'bg-[#16659D]',
 		'bg-[#FDDB46]',
 		'bg-[#B3B3B3]',
@@ -20,7 +33,10 @@ module.exports = {
 		'bg-[#2FA5B2]',
 		'bg-[#FEDB31]',
 		'bg-[#C7A70A]',
-		'bg-[#F25D00]'
+		'bg-[#F25D00]',
+		'bg-{#0D659D]',
+		'bg-[#5EAEF3]',
+		'peer-checked:ring-bi-gray-border'
 	  ],
 	theme: {
 		screens: {

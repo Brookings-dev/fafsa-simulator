@@ -5,9 +5,9 @@ import { Image } from 'svelte-lazy-loader';
 
 // create images on-the-fly with vite-imagetools
 // https://www.npmjs.com/package/vite-imagetools
-import ImagePlaceholder from '$lib/assets/san-felipe-del-morro-castle.jpg?w=100&png&blur=5';
-import ImageSrc from '$lib/assets/san-felipe-del-morro-castle.jpg?w=650&webp';
-import ImageSrcset from '$lib/assets/san-felipe-del-morro-castle.jpg?w=300;600;900&webp&srcset';
+// import ImagePlaceholder from '$lib/assets/san-felipe-del-morro-castle.jpg?w=100&png&blur=5';
+// import ImageSrc from '$lib/assets/san-felipe-del-morro-castle.jpg?w=650&webp';
+// import ImageSrcset from '$lib/assets/san-felipe-del-morro-castle.jpg?w=300;600;900&webp&srcset';
 
 // viz components
 import ElectionFraud from '$lib/components/charts/barchart/electionFraud.svelte';

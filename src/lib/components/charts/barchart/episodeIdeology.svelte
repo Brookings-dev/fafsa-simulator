@@ -1,22 +1,19 @@
 <script>
 	// example chart from LayerCake
 	// https://layercake.graphics/example/Bar/
-	import { LayerCake, Svg, flatten, uniques } from 'layercake';
+	import { LayerCake, Svg, flatten } from 'layercake';
 	import { scaleBand, scaleOrdinal } from 'd3-scale';
 	import { timeFormat, timeParse } from 'd3';
 	import { stack, stackOrderReverse } from 'd3-shape';
-	import { tweened } from 'svelte/motion';
-	import * as eases from 'svelte/easing';
+	// import { tweened } from 'svelte/motion';
+	// import * as eases from 'svelte/easing';
 	import ColumnStacked from './ColumnStacked.svelte';
 	import AxisX from './AxisX.svelte';
 	import AxisY from './AxisY.svelte';
-
 	import DateRangeSelect from '$lib/components/helpers/DateRangeSelect.svelte';
 
 	import getKeyColor from '$lib/keyLookup';
 
-	// This example loads csv data as json using @rollup/plugin-dsv
-	// import data from '$lib/data/election_fraud_data.csv';
 	import data from '$lib/data/ideology.csv';
 
 	const yKey = [0, 1];
@@ -25,18 +22,24 @@
 	let filteredData = data;
 	let fill;
 	let xKey = 'month_year';
-	// console.log(filteredData);
+
 	let options = filteredData.map((option) => {
 		return {
 			month_year: option.month_year,
 			'More Conservative': {
 				order: 1,
 				value: option['More Conservative'],
-				color: '#F55D5B'
+				color: '#F55D5B',
+				className: 'conservative'
 			},
-			'More Liberal': { order: 2, value: option['More Liberal'], color: '#16659D' },
-			Moderate: { order: 3, value: option.Moderate, color: '#FDDB46' },
-			Unknown: { order: 4, value: option.Unknown, color: '#B3B3B3' }
+			'More Liberal': {
+				order: 2,
+				value: option['More Liberal'],
+				color: '#16659D',
+				className: 'liberal'
+			},
+			Moderate: { order: 3, value: option.Moderate, color: '#FDDB46', className: 'moderate' },
+			Unknown: { order: 4, value: option.Unknown, color: '#B3B3B3', className: 'unknown' }
 		};
 	});
 
@@ -51,8 +54,6 @@
 		.value((obj, key) => obj[key]['value']);
 
 	$: series = stackData(options);
-
-	// console.log(options);
 
 	const handleApplyDateRange = (thisDate) => {
 		let start = timeFormat('%Y-%m')(timeParse('%Y-%m')(thisDate.detail.startDate));
@@ -100,8 +101,6 @@
 		}
 	};
 
-	// $: console.log(series);
-
 	// this is if you want the scales to update too
 	// const tweenOptions = {
 	// 	duration: 300,
@@ -112,53 +111,47 @@
 	// $: yDomain = tweened(undefined, tweenOptions);
 </script>
 
-<div>
-	<div class="flex flex-row justify-between items-center">
-		<div class="flex flex-row gap-2 flex-1">
-			<!-- <ToggleSelection variables={Object.entries(options[0])} {handleChange} {xKey} /> -->
-			{#each Object.entries(options[0]) as [value, { color, order }]}
-				{#if value !== 'month_year'}
-					<div>
-						<input
-							type="checkbox"
-							class="select-items self-center justify-self-center appearance-none"
-							name={order}
-							{value}
-							{order}
-							id={value}
-							checked={chosenValues.includes(value)}
-							on:change={handleChange}
-						/>
-						<label
-							class="grid grid-flow-row-dense peer border border-solid justify-center cursor-pointer hover:bg-bi-gray-light peer-checked:border-bi-gray-light peer-checked:bg-[{color}]"
-							for={value}
-						>
-							<div class="flex flex-row justify-between items-center p-[1px]">
-								<div class="w-3 h-3 peer-checked:bg-bi-gray-light bg-[{color}] m-1" for={value} />
-								<p class="text-sm self-center justify-self-center text-center p-1">
-									{value}
-								</p>
-							</div>
-						</label>
-					</div>
-				{/if}
-			{/each}
-		</div>
-		<div class="flex flex-row gap-2 flex-1 justify-end">
-			<DateRangeSelect
-				--applyButtonWidth="65px"
-				--applyButtonHeight="25px"
-				startDateMin="2012-12"
-				endDateMax="2021-12"
-				on:onApplyDateRange={handleApplyDateRange}
-			/>
-		</div>
+<div class="flex flex-row justify-between items-center">
+	<ul class="flex flex-row gap-2 flex-2">
+		{#each Object.entries(options[0]) as [value, { color, order }]}
+			{#if value !== 'month_year'}
+				<li class="relative">
+					<input
+						type="checkbox"
+						class="sr-only peer	flex p-5 bg-white border border-gray-300 rounded-lg cursor-pointer focus:outline-none hover:bg-gray-50 peer-checked:ring-green-500 peer-checked:ring-2 peer-checked:border-transparent"
+						name={order}
+						{value}
+						{order}
+						id={value}
+						checked={chosenValues.includes(value)}
+						on:change={handleChange}
+					/>
+					<div
+						class="absolute w-3 h-3 right-3 peer-checked:block peer-checked:bg-[{color}] bg-bi-gray-light top-2 left-3"
+						for={value}
+					/>
+					<label
+						class="flex pl-7 bg-white border border-gray-300 cursor-pointer hover:bg-bi-gray-light text-sm self-center justify-self-center text-center p-1.5 font-sans"
+						for={value}
+					>
+						{value}</label
+					>
+				</li>
+			{/if}
+		{/each}
+	</ul>
+	<div class="flex-1 flex-row gap-2 flex-1 justify-end">
+		<DateRangeSelect
+			--applyButtonWidth="65px"
+			--applyButtonHeight="25px"
+			startDateMin="2012-12"
+			endDateMax="2021-12"
+			on:onApplyDateRange={handleApplyDateRange}
+		/>
 	</div>
 </div>
 
 <div class="w-full" style:height="400px">
-	<!-- <div class="chart-container"> -->
-
 	<LayerCake
 		padding={{ top: 20, right: 0, bottom: 20, left: 20 }}
 		x={(d) => d.data[xKey]}
@@ -188,8 +181,6 @@
 			<ColumnStacked />
 		</Svg>
 	</LayerCake>
-
-	<!-- </div> -->
 </div>
 
 <style>

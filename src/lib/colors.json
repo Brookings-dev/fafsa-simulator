@@ -3,8 +3,11 @@
         "DEFAULT" : "#F55D5B"
     },
     "bi-gray": {
+        "border" : "#CCCCCC",
+        "xLight" : "#F2F2F2",
         "light" : "#E6E6E6",
-        "DEFAULT" : "#B3B3B3"
+        "DEFAULT" : "#B3B3B3",
+        "dark" : "#444444"
     },
     "bi-yellow": {
         "DEFAULT" : "#FDDB46"
