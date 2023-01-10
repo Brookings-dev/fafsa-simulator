@@ -137,6 +137,8 @@
 		/>
 		<input
 			type="range"
+			multiple
+			data-values="1 86400"
 			class="sliderEnd"
 			bind:value={sliderEndTimestamp}
 			min={startDateMinTimestamp}

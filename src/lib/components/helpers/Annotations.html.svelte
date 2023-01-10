@@ -25,7 +25,7 @@
 <div class="layercake-annotations">
 	{#each annotations as d, i}
 		<div
-			class="layercake-annotation font-sans text-xs bold text-white leading-4 font-bold"
+			class="layercake-annotation bi-font-sans bi-text-xs bi-bold bi-text-white bi-leading-4 bi-font-bold"
 			data-id={i}
 			style={fillStyle(d)}
 		>

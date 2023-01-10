@@ -16,9 +16,11 @@
 	margin-bottom: 30px;
 }
 .footnote {
-	font-size: 0.75rem;
-	margin-bottom: 0px;
-	margin-top: 40px;
+	font-size: 0.75rem !important;
+	margin-bottom: 0px !important;
+	margin-top: 40px !important;
+	margin-left: 0 !important;
+	margin-right: 0 !important;
 }
 .footnote-second {
 	font-size: 0.75rem;
@@ -31,5 +33,11 @@
 	margin-bottom: 10px;
 }
 .bolded {
-	font-weight: 700;
+	font-weight: 700 !important;
+}
+.podcast-interactive {
+	margin: 1em auto;
+	max-width: 1000px;
+	width: 100%;
+	height: 400px;
 }

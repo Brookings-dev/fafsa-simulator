@@ -27,12 +27,22 @@ p {
 	margin-bottom: 30px;
 }
 figcaption {
-	font-family: roboto;
-	font-weight: bold;
-	color: #003a70;
-	font-size: 1.2rem;
+	font-family: roboto !important;
+	font-weight: bold !important;
+	color: #003a70 !important;
+	font-size: 1.2rem !important;
+}
+ul li:before {
+	content: none !important;
 }
 
+ul li:after {
+	content: none !important;
+}
+
+ul {
+	content: none !important;
+}
 /* Scoped charting styles. Won't effect anything else on the page. */
 [data-cmsvelte] {
 	@tailwind base;
@@ -41,7 +51,7 @@ figcaption {
 
 	/* tooltip via data-tooltip="Hello world" */
 	[data-tooltip] {
-		@apply relative inline-block cursor-pointer;
+		@apply bi-relative bi-inline-block bi-cursor-pointer;
 	}
 	[data-tooltip]:active:after,
 	[data-tooltip]:active:before,
@@ -49,18 +59,18 @@ figcaption {
 	[data-tooltip]:focus:before,
 	[data-tooltip]:hover:after,
 	[data-tooltip]:hover:before {
-		@apply block -translate-y-1;
+		@apply bi-block bi--translate-y-1;
 	}
 	[data-tooltip]:after {
-		@apply bottom-full bg-black text-white text-xs rounded py-1 px-2 whitespace-nowrap leading-tight;
+		@apply bi-bottom-full bi-bg-black bi-text-white bi-text-xs bi-rounded bi-py-1 bi-px-2 bi-whitespace-nowrap bi-leading-tight;
 		content: attr(data-tooltip);
 	}
 	[data-tooltip]:before {
-		@apply absolute top-[-4px] left-0 w-[8px] h-[8px] border-r border-b border-black bg-black rotate-45;
+		@apply bi-absolute bi-top-[-4px] bi-left-0 bi-w-[8px] bi-h-[8px] bi-border-r bi-border-b bi-border-black bi-bg-black bi-rotate-45;
 		content: '';
 	}
 	[data-tooltip]:after,
 	[data-tooltip]:before {
-		@apply z-40 hidden absolute left-1/2 select-none  -translate-x-1/2 -translate-y-2 pointer-events-none transition-all duration-300 ease-out;
+		@apply bi-z-40 bi-hidden bi-absolute bi-left-1/2 bi-select-none  bi--translate-x-1/2 bi--translate-y-2 bi-pointer-events-none bi-transition-all bi-duration-300 bi-ease-out;
 	}
 }

@@ -85,7 +85,7 @@
 		font-weight: 400;
 	}
 	.tick line {
-		@apply stroke-gray-300;
+		@apply bi-stroke-gray-300;
 	}
 	.tick .gridline {
 		stroke-dasharray: 0.3, 10;

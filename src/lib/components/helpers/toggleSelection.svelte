@@ -12,7 +12,7 @@
 		<div>
 			<input
 				type="checkbox"
-				class="select-items self-center justify-self-center appearance-none"
+				class="bi-select-items bi-self-center bi-justify-self-center bi-appearance-none"
 				name={order}
 				{value}
 				{order}

@@ -3,9 +3,29 @@
   Generates an SVG column chart. It uses the z-scale for color assignments and aassumes both `xScale` and `zScale` are ordinal scales.  It assumes your data is in a [D3 stack format](https://github.com/d3/d3-shape#stack
  -->
 <script>
-	import { getContext } from 'svelte';
+	import { createEventDispatcher, getContext } from 'svelte';
+	import Tooltip from '$lib/components/helpers/Tooltip.svelte';
 
 	const { data, xGet, yGet, zGet, xScale } = getContext('LayerCake');
+
+	let tooltip;
+	export let modVal;
+
+	$: tooltipData = {};
+
+	const mouseover = (e) => {
+		tooltip = e;
+		tooltipData = e;
+		modVal = tooltipData.Moderate.value;
+		console.log(modVal);
+	};
+
+	const mouseout = () => {
+		tooltip = undefined;
+		tooltipData = undefined;
+		modVal = undefined;
+		// console.log('mouseouted');
+	};
 </script>
 
 <g class="column-group">
@@ -13,10 +33,7 @@
 		{#each series as d}
 			{@const yVals = $yGet(d)}
 			{@const columnHeight = yVals[0] - yVals[1]}
-			{@const keys = (key) => d['data'][key]}
-			<!-- {@const parse = JSON.stringify(newData)} -->
-			<!-- {@const key = Object.entries(d.data).map(([key, value]) => key)} -->
-			<!-- {#each newData as [label, { key, value }]} -->
+			{@const tooltipData = d.data}
 			<rect
 				class="group-rect"
 				data-id={i}
@@ -25,13 +42,23 @@
 				width={$xScale.bandwidth()}
 				height={columnHeight}
 				fill={$zGet(series)}
+				on:mouseenter={mouseover(tooltipData)}
+				on:mouseleave={mouseout}
 			/>
 		{/each}
 	{/each}
 </g>
 
-<!-- fill={$zGet(series)} -->
+{#if !!tooltip}
+	<Tooltip>
+		<p>{modVal}</p>
+	</Tooltip>
+{/if}
+
 <style>
+	.column-group {
+		outline: none !important;
+	}
 	.column-group rect {
 		transition: all 1s;
 	}

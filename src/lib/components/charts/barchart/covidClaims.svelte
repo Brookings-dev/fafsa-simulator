@@ -165,14 +165,14 @@
 
 <!-- <div class="flex flex-row justify-between items-center">
 	<div class="flex flex-row gap-2 flex-1 pb-[50px]"> -->
-<div class="flex flex-row justify-between items-center">
-	<ul class="flex flex-row gap-2 flex-1 pb-[40px]">
+<div class="bi-flex bi-flex-row bi-justify-between bi-items-center">
+	<ul class="bi-flex bi-flex-row bi-gap-2 bi-flex-1 bi-pb-[40px]">
 		{#each Object.entries(newData[0]) as [value, { color, order, altName }]}
 			{#if value !== 'week_year'}
-				<li class="relative">
+				<li class="bi-relative">
 					<input
 						type="checkbox"
-						class="sr-only peer	flex p-5 bg-white border border-gray-300 rounded-lg cursor-pointer focus:outline-none hover:bg-gray-50 peer-checked:ring-green-500 peer-checked:ring-2 peer-checked:border-transparent"
+						class="bi-sr-only bi-peer bi-flex bi-p-5 bi-bg-white bi-border bi-border-gray-300 bi-rounded-lg bi-cursor-pointer focus:bi-outline-none hover:bi-bg-gray-50 peer-checked:bi-ring-2 peer-checked:bi-border-transparent"
 						name={altName}
 						{value}
 						{order}
@@ -181,11 +181,11 @@
 						on:change={handleChange}
 					/>
 					<div
-						class="absolute w-3 h-3 right-3 peer-checked:block peer-checked:bg-[{color}] bg-bi-gray-light top-2 left-3"
+						class="bi-absolute bi-w-3.5 bi-h-3.5 bi-right-3 peer-checked:bi-block peer-checked:bi-bg-[{color}] bi-bg-bi-gray-light bi-bg-bi-gray-light bi-top-2 bi-left-3"
 						for={value}
 					/>
 					<label
-						class="flex pl-7 bg-white border border-gray-300 cursor-pointer hover:bg-bi-gray-light text-sm self-center justify-self-center text-center p-1.5 font-sans"
+						class="bi-flex bi-pl-7 bi-bg-white bi-border bi-border-gray-300 bi-cursor-pointer hover:bi-bg-bi-gray-light bi-text-sm bi-self-center bi-justify-self-center bi-text-center bi-p-1.5 bi-font-sans"
 						for={value}
 					>
 						{altName}</label
@@ -195,7 +195,7 @@
 		{/each}
 	</ul>
 </div>
-<div class="w-full chart-container" style:height="400px">
+<div class="bi-w-full chart-container" style:height="400px">
 	<LayerCake
 		padding={{ top: 0, right: 0, bottom: 20, left: 20 }}
 		x={(d) => d.data[xKey]}

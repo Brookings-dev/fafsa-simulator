@@ -86,7 +86,7 @@
 				text-anchor={textAnchor(i)}>{formatTick(tick)}</text
 			>
 			<text
-				class="fill-black-light text-xs sm:text-sm font-sans"
+				class="bi-fill-black-light bi-text-xs sm:bi-text-sm bi-font-sans"
 				x={isBandwidth ? $xScale.bandwidth() : 0}
 				y={yTick}
 				dx="15"

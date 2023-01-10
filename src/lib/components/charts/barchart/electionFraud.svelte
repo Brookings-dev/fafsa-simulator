@@ -34,6 +34,7 @@
 	let arrowFill = '#F26D00';
 	let arrowStroke = 'transparent';
 	let insurrectionString = `JANUARY 6<sup>TH</sup>*`;
+	$: chosenValues = [];
 
 	const handleChange = (event) => {
 		let { checked, value } = event.target;
@@ -86,14 +87,14 @@
 </script>
 
 <div>
-	<div class="flex flex-row justify-between items-center pb-[40px]">
-		<div class="flex flex-row gap-2 flex-2">
+	<div class="bi-flex bi-flex-row bi-justify-between bi-items-center bi-pb-[40px]">
+		<div class="bi-flex bi-flex-row bi-gap-2 bi-flex-2">
 			{#each Object.entries(options[0]) as [value, { altName }]}
 				{#if value !== 'year_week'}
 					<div>
 						<input
 							type="radio"
-							class="select-items self-center justify-self-center appearance-none peer"
+							class="bi-select-items bi-self-center bi-justify-self-center bi-appearance-none bi-peer"
 							{value}
 							id={value}
 							bind:group={selected}
@@ -101,11 +102,11 @@
 							on:change={handleChange}
 						/>
 						<label
-							class="grid grid-flow-row-dense peer border border-solid justify-center cursor-pointer bg-bi-gray-xLight hover:bg-bi-gray-light peer-checked:bg-bi-gray-dark peer-checked:text-white"
+							class="bi-grid bi-grid-flow-row-dense bi-peer bi-border bi-border-solid bi-justify-center bi-cursor-pointer bi-bg-bi-gray-xLight hover:bi-bg-bi-gray-light peer-checked:bi-bg-bi-gray-dark peer-checked:bi-text-white"
 							for={value}
 						>
-							<div class="flex flex-row justify-between items-center p-[1px]">
-								<p class="text-sm self-center justify-self-center text-center p-1">
+							<div class="bi-flex bi-flex-row bi-justify-between bi-items-center bi-p-[1px]">
+								<p class="bi-text-sm bi-self-center bi-justify-self-center bi-text-center bi-p-1">
 									{altName}
 								</p>
 							</div>
@@ -114,20 +115,24 @@
 				{/if}
 			{/each}
 		</div>
-		<div class="flex flex-row gap-3 flex-1 justify-end">
-			<div class="flex flex-row justify-between items-center p-[1px]">
-				<div class="bg-[#5EAEF3] w-3 h-3 m-1" />
-				<p class="text-sm self-center justify-self-center text-center p-1">Before Election</p>
+		<div class="bi-flex bi-flex-row bi-gap-3 bi-flex-1 bi-justify-end">
+			<div class="bi-flex bi-flex-row bi-justify-between bi-items-center bi-p-[1px]">
+				<div class="bi-bg-[#5EAEF3] bi-w-3 bi-h-3 bi-m-1" />
+				<p class="bi-text-sm bi-self-center bi-justify-self-center bi-text-center bi-p-1">
+					Before Election
+				</p>
 			</div>
-			<div class="flex flex-row justify-between items-center p-[1px]">
-				<div class="bg-[#0D659D] w-3 h-3 m-1" />
-				<p class="text-sm self-center justify-self-center text-center p-1">After Election</p>
+			<div class="bi-flex bi-flex-row bi-justify-between bi-items-center bi-p-[1px]">
+				<div class="bi-bg-[#0D659D] bi-w-3 bi-h-3 bi-m-1" />
+				<p class="bi-text-sm bi-self-center bi-justify-self-center bi-text-center bi-p-1">
+					After Election
+				</p>
 			</div>
 		</div>
 	</div>
 </div>
 
-<div class="w-full chart-container" style:height="400px">
+<div class="bi-w-full chart-container" style:height="400px">
 	<LayerCake
 		padding={{ top: 0, right: 42, bottom: 0, left: 5 }}
 		x={xKey}

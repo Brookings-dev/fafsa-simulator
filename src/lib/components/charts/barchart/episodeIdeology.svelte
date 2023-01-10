@@ -3,18 +3,22 @@
 	// https://layercake.graphics/example/Bar/
 	import { LayerCake, Svg, flatten } from 'layercake';
 	import { scaleBand, scaleOrdinal } from 'd3-scale';
-	import { timeFormat, timeParse } from 'd3';
+	import { timeFormat, timeParse, rollups } from 'd3';
 	import { stack, stackOrderReverse } from 'd3-shape';
-	// import { tweened } from 'svelte/motion';
-	// import * as eases from 'svelte/easing';
+	import { createEventDispatcher } from 'svelte';
+	import { tweened } from 'svelte/motion';
+	import * as eases from 'svelte/easing';
 	import ColumnStacked from './ColumnStacked.svelte';
 	import AxisX from './AxisX.svelte';
 	import AxisY from './AxisY.svelte';
-	import DateRangeSelect from '$lib/components/helpers/DateRangeSelect.svelte';
+	import SliderDateSelect from '$lib/components/helpers/SliderDateSelect.svelte';
+	import Tooltip from '$lib/components/helpers/Tooltip.svelte';
 
 	import getKeyColor from '$lib/keyLookup';
 
 	import data from '$lib/data/ideology.csv';
+	import { onMount } from 'svelte';
+	const dispatch = createEventDispatcher();
 
 	const yKey = [0, 1];
 	const zKey = 'key';
@@ -22,6 +26,20 @@
 	let filteredData = data;
 	let fill;
 	let xKey = 'month_year';
+	let tooltip;
+	let containerWidth = 1000;
+	let parentContainer;
+	$: isMobile = containerWidth < 768;
+	let mounted;
+	onMount(() => (mounted = true));
+
+	const mouseover = (d) => {
+		tooltip = d;
+	};
+	const mouseout = () => {
+		tooltip = undefined;
+	};
+	$: console.log(tooltip);
 
 	let options = filteredData.map((option) => {
 		return {
@@ -102,23 +120,31 @@
 	};
 
 	// this is if you want the scales to update too
-	// const tweenOptions = {
-	// 	duration: 300,
-	// 	easing: eases.cubicInOut
-	// };
+	const tweenOptions = {
+		duration: 300,
+		easing: eases.cubicInOut
+	};
 
-	// $: xDomain = tweened(undefined, tweenOptions);
-	// $: yDomain = tweened(undefined, tweenOptions);
+	$: xDomain = tweened(undefined, tweenOptions);
+	$: yDomain = tweened(undefined, tweenOptions);
 </script>
 
-<div class="flex flex-row justify-between items-center">
-	<ul class="flex flex-row gap-2 flex-2">
+<svelte:window
+	on:scroll={() => {
+		if (tooltip) tooltip = undefined;
+	}}
+/>
+
+<div class="bi-flex bi-flex-row bi-justify-between bi-items-center">
+	<ul
+		class="bi-flex bi-flex-row bi-gap-2 bi-flex-2 bi-list-none before:bi-content-none after:bi-content-none bi-content-none"
+	>
 		{#each Object.entries(options[0]) as [value, { color, order }]}
 			{#if value !== 'month_year'}
-				<li class="relative">
+				<li class="bi-relative">
 					<input
 						type="checkbox"
-						class="sr-only peer	flex p-5 bg-white border border-gray-300 rounded-lg cursor-pointer focus:outline-none hover:bg-gray-50 peer-checked:ring-green-500 peer-checked:ring-2 peer-checked:border-transparent"
+						class="bi-sr-only bi-peer bi-flex bi-p-0 bi-bg-white bi-border bi-border-gray-300 bi-rounded-sm bi-cursor-pointer focus:bi-outline-none hover:bi-bg-gray-50 peer-checked:bi-ring-2 peer-checked:bi-border-transparent"
 						name={order}
 						{value}
 						{order}
@@ -127,11 +153,11 @@
 						on:change={handleChange}
 					/>
 					<div
-						class="absolute w-3 h-3 right-3 peer-checked:block peer-checked:bg-[{color}] bg-bi-gray-light top-2 left-3"
+						class="bi-absolute bi-w-3.5 bi-h-3.5 bi-right-3 bi-top-2 peer-checked:bi-block peer-checked:bi-bg-[{color}] bi-bg-bi-gray-light bi-left-2"
 						for={value}
 					/>
 					<label
-						class="flex pl-7 bg-white border border-gray-300 cursor-pointer hover:bg-bi-gray-light text-sm self-center justify-self-center text-center p-1.5 font-sans"
+						class="bi-flex bi-pl-7 bi-bg-white bi-border bi-border-gray-300 bi-cursor-pointer hover:bi-bg-bi-gray-light bi-text-sm bi-self-center bi-justify-self-center bi-text-center bi-p-1 bi-font-sans"
 						for={value}
 					>
 						{value}</label
@@ -140,8 +166,8 @@
 			{/if}
 		{/each}
 	</ul>
-	<div class="flex-1 flex-row gap-2 flex-1 justify-end">
-		<DateRangeSelect
+	<div class="bi-flex-1 bi-flex-row bi-gap-2 bi-flex-1 bi-justify-end">
+		<SliderDateSelect
 			--applyButtonWidth="65px"
 			--applyButtonHeight="25px"
 			startDateMin="2012-12"
@@ -150,39 +176,46 @@
 		/>
 	</div>
 </div>
-
-<div class="w-full" style:height="400px">
-	<LayerCake
-		padding={{ top: 20, right: 0, bottom: 20, left: 20 }}
-		x={(d) => d.data[xKey]}
-		y={yKey}
-		z={zKey}
-		xScale={scaleBand().paddingInner([0.12]).round(true)}
-		xDomain={null}
-		yDomain={[0, 1200]}
-		flatData={flatten(series)}
-		data={series}
-		zScale={scaleOrdinal()}
-		zDomain={chosenValues}
-		zRange={seriesColors}
-	>
-		<Svg>
-			<AxisX
-				gridlines={false}
-				baseline={true}
-				fontColor="#333333"
-				formatTick={(tick) =>
-					timeFormat('%b')(timeParse('%Y-%m')(tick)) == 'Jan' ||
-					timeFormat('%b %Y')(timeParse('%Y-%m')(tick)) == 'Dec 2021'
-						? timeFormat('%b %Y')(timeParse('%Y-%m')(tick))
-						: ''}
-			/>
-			<AxisY ticks={6} gridlines={true} textAnchor="end" dyTick="4" xTick="-6" />
-			<ColumnStacked />
-		</Svg>
-	</LayerCake>
+<div class="bi-w-full bi-chart-container" style="height: 400px;" bind:clientWidth={containerWidth}>
+	{#if mounted}
+		<LayerCake
+			padding={{ top: 20, right: 0, bottom: 20, left: 20 }}
+			x={(d) => d.data[xKey]}
+			y={yKey}
+			z={zKey}
+			xScale={scaleBand().paddingInner([0.12]).round(true)}
+			{xDomain}
+			{yDomain}
+			flatData={flatten(series)}
+			data={series}
+			zScale={scaleOrdinal()}
+			zDomain={chosenValues}
+			zRange={seriesColors}
+			height="400"
+		>
+			<Svg>
+				<AxisX
+					gridlines={false}
+					baseline={true}
+					fontColor="#333333"
+					formatTick={(tick) =>
+						timeFormat('%b')(timeParse('%Y-%m')(tick)) == 'Jan' ||
+						timeFormat('%b %Y')(timeParse('%Y-%m')(tick)) == 'Dec 2021'
+							? timeFormat('%b %Y')(timeParse('%Y-%m')(tick))
+							: ''}
+				/>
+				<AxisY ticks={6} gridlines={true} textAnchor="end" dyTick="4" xTick="-6" />
+				<ColumnStacked {parentContainer} />
+			</Svg>
+		</LayerCake>
+	{/if}
 </div>
 
+<!-- {#if !!tooltip}
+	<Tooltip {parentContainer}>
+		<p>hello</p>
+	</Tooltip>
+{/if} -->
 <style>
 	/*
     The wrapper div needs to have an explicit width and height in CSS.
