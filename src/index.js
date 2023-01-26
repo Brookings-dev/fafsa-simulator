@@ -101,3 +101,5 @@ components.forEach((comp) => {
 		props
 	});
 });
+
+// export { default } from './Slider.svelte';

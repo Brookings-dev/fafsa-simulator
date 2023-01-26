@@ -4,8 +4,6 @@
  -->
 <script>
 	import { getContext, onMount } from 'svelte';
-	import { timeParse } from 'd3';
-
 	/** @type {Array} annotations - A list of annotation objects. See the [Column](https://layercake.graphics/example/Column) chart example for the schema and options. */
 	export let annotations = [];
 
@@ -16,18 +14,9 @@
 	export let annotationClass = '.layercake-annotation';
 
 	export let stroke = '#000';
-
-	export let getText1 = (d) => d.text1;
-	export let getText2 = (d) => d.text2;
-
-	export let getLeft = (d) => d.left;
-	export let getTop = (d) => d.top;
-
-	let container;
-	let markerWidth = 70;
-
 	const { height, xScale } = getContext('LayerCake');
 
+	let container;
 	let annotationEls;
 
 	// This searches the DOM for the HTML annotations
@@ -47,55 +36,37 @@
 			{#each anno.arrows as arrow}
 				<line
 					class="anno-line"
-					x1={$xScale(timeParse('%Y-%V')(arrow)) + 7}
-					y1={$height * 0.05}
-					x2={$xScale(timeParse('%Y-%V')(arrow)) + 7}
+					x1={$xScale(arrow) + 3}
+					y1={-$height / 12}
+					x2={$xScale(arrow) + 3}
 					y2={$height}
 					{stroke}
-					marker-start={getText1(anno) == 'JAN' ? 'url(#arrowheadJan)' : 'url(#arrowhead)'}
+					marker-start="url(#arrowheadflex)"
 				/>
 			{/each}
 		{/if}
-		<text
-			class="text-annotation"
-			x={getText1(anno) == 'JAN'
-				? $xScale(timeParse('%Y-%V')(getLeft(anno))) - markerWidth / 10
-				: $xScale(timeParse('%Y-%V')(getLeft(anno))) - markerWidth / 3}
-			y={$height - ($height - getTop(anno) * 2)}
-		>
-			<tspan class="text-break">{getText1(anno)}</tspan>
-		</text>
-		<text
-			class="text-annotation"
-			x={getText1(anno) == 'JAN'
-				? $xScale(timeParse('%Y-%V')(getLeft(anno))) - markerWidth / 15
-				: $xScale(timeParse('%Y-%V')(getLeft(anno))) - markerWidth / 8.5}
-			y={$height - ($height - getTop(anno) * 2.85)}
-		>
-			<tspan class="text-break">{getText2(anno)}</tspan>
-		</text>
 	{/each}
 </g>
 
+<!-- <g bind:this={container}>
+	{#if annotations.length}
+		<g class="swoops">
+			{#each annotations as anno, i}
+				{#if anno.arrows}
+					{#each anno.arrows as arrow}
+						<path marker-start="url(#arrowheadflex)" d={d(anno, i, arrow)} {stroke} />
+					{/each}
+				{/if}
+			{/each}
+		</g>
+	{/if}
+</g> -->
 <style>
-	.text-break {
-		max-width: 50px;
-	}
 	.anno-line {
 		fill: none;
 		/* stroke: #000; */
 		stroke-width: 1;
 		stroke-dasharray: 1, 6;
 		stroke-linecap: round;
-	}
-	.text-annotation {
-		position: relative;
-		z-index: 1;
-		max-width: 20px;
-		text-align: center;
-		font-family: roboto;
-		font-size: small;
-		font-weight: 400;
-		fill: white;
 	}
 </style>

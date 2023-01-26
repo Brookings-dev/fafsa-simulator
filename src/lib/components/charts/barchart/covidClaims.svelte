@@ -4,14 +4,15 @@
 	import { LayerCake, Svg, flatten, Html } from 'layercake';
 	import { scaleBand, scaleOrdinal } from 'd3-scale';
 	import { timeFormat, timeParse } from 'd3';
+	import * as d3 from 'd3';
 	import { stack, stackOrderReverse } from 'd3-shape';
 
 	import ColumnStacked from './ColumnStacked.svelte';
 	import AxisX from './AxisX.svelte';
 	import AxisY from './AxisY.svelte';
-	import ArrowheadMarker from '$lib/components/helpers/ArrowheadMarker.svelte';
-	import Arrows from '$lib/components/helpers/Arrows.svelte';
-	import Annotations from '$lib/components/helpers/Annotations.html.svelte';
+	import ArrowheadMarkerFlex from '$lib/components/helpers/ArrowheadMarkerFlex.svelte';
+	import ArrowsFlex from '$lib/components/helpers/ArrowsFlex.svelte';
+	import AnnotationsFlex from '$lib/components/helpers/AnnotationsFlex.html.svelte';
 
 	import getKeyColor from '$lib/keyLookup';
 
@@ -23,8 +24,9 @@
 	let xKey = 'week_year';
 	let covidData = data;
 	let fill;
-	let arrowFill = '#F26D00';
+	let arrowFill = '#DCE2E7';
 	let arrowStroke = 'transparent';
+	let pathStroke = '#AAAAAA';
 
 	let newData = covidData.map((option) => {
 		return {
@@ -62,6 +64,11 @@
 			}
 		};
 	});
+
+	let extent;
+	let maxVal;
+	$: extent = d3.extent(flatten(series), (d) => d[1]);
+	$: maxVal = Math.ceil(extent[1] / 5) * 5;
 
 	$: seriesNames = Object.keys(covidData[0]).filter((d) => d !== xKey);
 	$: chosenValues = seriesNames;
@@ -113,121 +120,142 @@
 	const checkMonth = (d) => timeFormat('%b')(timeParse('%Y-%V')(d));
 	const checkWeek = (d) => timeFormat('%V')(timeParse('%Y-%V')(d));
 	// const checkYear = (d) => timeFormat('%Y')(timeParse('%Y-%V')(d));
-
 	const formatTickX = (tick) =>
-		(checkMonth(tick) == 'Feb' && checkWeek(tick) % 4 == 0) ||
-		(checkMonth(tick) == 'May' && checkWeek(tick) % 4 == 0) ||
-		(checkMonth(tick) == 'Aug' && checkWeek(tick) % 4 == 0 && checkWeek(tick) != 36) ||
-		(checkMonth(tick) == 'Nov' && checkWeek(tick) % 4 == 0 && checkWeek(tick) != 44)
+		// timeFormat('%b %Y')(timeParse('%Y-%V')(tick))
+		(checkMonth(tick) == 'Feb' && checkWeek(tick) == 8 && checkMonth(tick) !== 'Mar') ||
+		(checkMonth(tick) == 'May' && checkWeek(tick) == 20 && checkMonth(tick) != 'Jun') ||
+		(checkMonth(tick) == 'Aug' && checkWeek(tick) == 33) ||
+		(checkMonth(tick) == 'Nov' && checkWeek(tick) == 47)
 			? timeFormat('%b %Y')(timeParse('%Y-%V')(tick))
 			: '';
-
+	console.log(covidData);
 	const annotations = [
 		{
-			text: 'ELECTION DAY',
-			top: '30px',
-			left: '52%',
-			arrows: [
-				{
-					clockwise: true, // true or false, defaults to true
-					source: {
-						anchor: 'middle-middle', // can be `{left, middle, right},{top-middle-bottom}`
-						dx: 2,
-						dy: -25
-					},
-					target: {
-						x: '55%',
-						y: '100%'
-					}
-				}
-			]
+			text: "AMERICA'S FRONTLINE DOCTORS",
+			modalText:
+				'America’s Frontline Doctors placeholder text. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+			top: '-50px',
+			left: '12.5%',
+			width: '129px',
+			padding: '5px',
+			arrows: ['2020-31']
 		},
 		{
-			text: 'LOREM IPSUM',
-			top: '0px',
-			left: '94.8%',
-			arrows: [
-				{
-					source: {
-						anchor: 'middle-middle',
-						dy: -26,
-						dx: 0
-					},
-					target: {
-						x: '97.5%',
-						y: '100%'
-					}
-				}
-			]
+			text: '2020 ELECTION',
+			modalText:
+				'2020 Election placeholder text. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+			top: '-88px',
+			left: '31.75%',
+			width: '70px',
+			arrows: ['2020-44']
+		},
+		{
+			text: "FAUCI'S EMAILS RELEASED",
+			modalText:
+				'FAUCI placeholder text. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+			top: '-130px',
+			left: '56%',
+			width: '100px',
+			arrows: ['2021-23']
+		},
+		{
+			text: 'DELTA VARIANT PEAK',
+			modalText:
+				'DELTA VARIANT placeholder text. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+			top: '-170px',
+			left: '70%',
+			width: '85px',
+			padding: '5px',
+			arrows: ['2021-38']
+		},
+		{
+			text: 'OMICRON WAVE',
+			modalText:
+				'Fauci’s Emails Released — In June 2021, Dr. Fauci’s correspondences from the early stages of the pandemic were released via Freedom of Information Act. They included speculation regarding both the efficacy of masks and the “lab leak” theory that the virus was manufactured and accidentally escaped from the Wuhan Institute of Virology in China. This led to a spike in conspiratorial claims.',
+			top: '-210px',
+			left: '82%',
+			width: '65px',
+			arrows: ['2021-48']
 		}
 	];
 </script>
 
 <!-- <div class="flex flex-row justify-between items-center">
 	<div class="flex flex-row gap-2 flex-1 pb-[50px]"> -->
-<div class="bi-flex bi-flex-row bi-justify-between bi-items-center">
-	<ul class="bi-flex bi-flex-row bi-gap-2 bi-flex-1 bi-pb-[40px]">
-		{#each Object.entries(newData[0]) as [value, { color, order, altName }]}
-			{#if value !== 'week_year'}
-				<li class="bi-relative">
-					<input
-						type="checkbox"
-						class="bi-sr-only bi-peer bi-flex bi-p-5 bi-bg-white bi-border bi-border-gray-300 bi-rounded-lg bi-cursor-pointer focus:bi-outline-none hover:bi-bg-gray-50 peer-checked:bi-ring-2 peer-checked:bi-border-transparent"
-						name={altName}
-						{value}
-						{order}
-						id={value}
-						checked={chosenValues.includes(value)}
-						on:change={handleChange}
-					/>
-					<div
-						class="bi-absolute bi-w-3.5 bi-h-3.5 bi-right-3 peer-checked:bi-block peer-checked:bi-bg-[{color}] bi-bg-bi-gray-light bi-bg-bi-gray-light bi-top-2 bi-left-3"
-						for={value}
-					/>
-					<label
-						class="bi-flex bi-pl-7 bi-bg-white bi-border bi-border-gray-300 bi-cursor-pointer hover:bi-bg-bi-gray-light bi-text-sm bi-self-center bi-justify-self-center bi-text-center bi-p-1.5 bi-font-sans"
-						for={value}
-					>
-						{altName}</label
-					>
-				</li>
-			{/if}
-		{/each}
-	</ul>
-</div>
-<div class="bi-w-full chart-container" style:height="400px">
-	<LayerCake
-		padding={{ top: 0, right: 0, bottom: 20, left: 20 }}
-		x={(d) => d.data[xKey]}
-		y={yKey}
-		z={zKey}
-		xScale={scaleBand().paddingInner([0.12]).round(true)}
-		xDomain={null}
-		yDomain={[0, 25]}
-		flatData={flatten(series)}
-		data={series}
-		zScale={scaleOrdinal()}
-		zDomain={chosenValues}
-		zRange={seriesColors}
-	>
-		<Svg>
-			<AxisX gridlines={false} formatTick={formatTickX} />
-			<AxisY ticks={4} gridlines={true} textAnchor="end" dyTick="4" xTick="-6" />
-			<ColumnStacked />
-		</Svg>
+<figure>
+	<figcaption class="title-no-subtitle">
+		The spread of unsubstantiated and false coronavirus-related claims ebbed and flowed throughout
+		the pandemic
+	</figcaption>
+	<!-- <p class="subtitle bi-mb-8">Data presented on a weekly basis.</p> -->
 
-		<Html>
-			<Annotations {annotations} />
-		</Html>
+	<div class="bi-flex bi-flex-row bi-justify-between bi-items-center">
+		<ul class="bi-flex bi-flex-row bi-gap-2 bi-flex-1 bi-pb-[40px]">
+			{#each Object.entries(newData[0]) as [value, { color, order, altName }]}
+				{#if value !== 'week_year'}
+					<li class="bi-relative">
+						<input
+							type="checkbox"
+							class="bi-sr-only bi-peer bi-flex bi-p-5 bi-bg-white bi-border bi-border-gray-300 bi-rounded-lg bi-cursor-pointer focus:bi-outline-none peer-checked:bi-ring-2 peer-checked:bi-border-transparent"
+							name={altName}
+							{value}
+							{order}
+							id={value}
+							checked={chosenValues.includes(value)}
+							on:change={handleChange}
+						/>
+						<div
+							class="bi-absolute bi-w-3.5 bi-h-3.5 bi-right-3 peer-checked:bi-block peer-checked:bi-bg-[{color}] bi-bg-bi-gray-light peer-hover:bi-opacity-50 bi-top-2.5 bi-left-2 bi-z-50"
+							for={value}
+						/>
+						<label
+							class="bi-flex bi-pl-7 bi-bg-white bi-border bi-border-gray-300 bi-cursor-pointer hover:bi-drop-shadow-lg bi-text-sm bi-self-center bi-justify-self-center bi-text-center bi-p-1.5 bi-font-sans"
+							for={value}
+						>
+							{altName}</label
+						>
+					</li>
+				{/if}
+			{/each}
+		</ul>
+	</div>
+	<div class="bi-w-full chart-container" style:height="400px">
+		<LayerCake
+			padding={{ top: 50, right: 0, bottom: 20, left: 20 }}
+			x={(d) => d.data[xKey]}
+			y={yKey}
+			z={zKey}
+			xScale={scaleBand().paddingInner([0.12]).round(true)}
+			xDomain={null}
+			yDomain={[0, maxVal]}
+			flatData={flatten(series)}
+			data={series}
+			zScale={scaleOrdinal()}
+			zDomain={chosenValues}
+			zRange={seriesColors}
+		>
+			<Svg>
+				<AxisX gridlines={false} formatTick={formatTickX} tickMarksCovid={true} tickMarks={false} />
+				<AxisY ticks={4} gridlines={true} textAnchor="start" dyTick="4" xTick="0" />
+				<ColumnStacked />
+			</Svg>
 
-		<Svg>
-			<svelte:fragment slot="defs">
-				<ArrowheadMarker fill={arrowFill} stroke={arrowStroke} />
-			</svelte:fragment>
-			<Arrows {annotations} stroke={arrowFill} />
-		</Svg>
-	</LayerCake>
-</div>
+			<Html>
+				<AnnotationsFlex {annotations} />
+			</Html>
+
+			<Svg>
+				<svelte:fragment slot="defs">
+					<ArrowheadMarkerFlex fill={arrowFill} stroke={arrowStroke} />
+				</svelte:fragment>
+				<ArrowsFlex {annotations} stroke={pathStroke} />
+			</Svg>
+		</LayerCake>
+	</div>
+	<p class="footnote">
+		<b class="bolded">Source:</b> Author's collection of available podcast episodes.
+	</p>
+</figure>
 
 <style>
 	/*

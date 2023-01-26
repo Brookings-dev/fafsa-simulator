@@ -4,30 +4,22 @@
  -->
 <script>
 	/** @type {String} [fill='#000'] – The arrowhead's fill color. */
-	export let fill = '#000';
+	export let fill = '#dce2e7';
 
 	/** @type {String} [stroke='#000'] – The arrowhead's fill color. */
 	export let stroke = '#000';
 
-	export let orient = 0;
-
-	export let markerWidth;
+	export let orient = '-360deg';
 </script>
 
 <marker
-	id="arrowhead"
-	viewBox="0 0 81.6 55.4"
-	preserveAspectRatio="none"
-	{markerWidth}
-	markerHeight="60"
+	id="arrowheadflex"
+	viewBox="0 0 2.5 4.04"
+	markerWidth="20"
+	markerHeight="12"
 	{orient}
-	refX="41"
+	refX="2"
 	refY="2"
 >
-	<!-- <path d="M-6,-6 L 0,0 L -6,6" {fill} {stroke} /> -->
-	<polygon
-		points="0.5,0.5 81.1,0.5 81.1,47.2 47,47.2 40.8,54.6 35.1,47.2 0.5,47.2 "
-		{fill}
-		{stroke}
-	/>
+	<polygon id="pointer" points="0 0 2.5 1.92 0 4.04 0 0" {fill} {stroke} />
 </marker>

@@ -83,7 +83,7 @@ export function parseCssValue(d, i, width, height) {
                                                0,1            with large-axis-flag=0 and sweep-flag=1 (clockwise);
                                                    100,0      to a point +100 in x and +0 in y, i.e. (300,50).
       */
-      const path = 'M ' + data[0][0] + ',' + data[0][1] +
+      const path = 'M ' + data[0][0]  + ',' + data[0][1] +
           ' a ' + r + ',' + r +
           ' 0 0,' + (clockwise ? '1' : '0') + ' ' +
           (data[1][0] - data[0][0]) + ',' + (data[1][1] - data[0][1]);
@@ -110,7 +110,7 @@ export function parseCssValue(d, i, width, height) {
     };
   
     render.y = function renderY (_) {
-      if (!arguments.length) return yValue;
+      if (!arguments.length) return yValue ;
       yValue = _;
       return render;
     };

@@ -55,6 +55,7 @@
 				<line
 					class="gridline"
 					x2="100%"
+					x1="30"
 					y1={yTick + (isBandwidth ? $yScale.bandwidth() / 2 : 0)}
 					y2={yTick + (isBandwidth ? $yScale.bandwidth() / 2 : 0)}
 				/>
@@ -87,6 +88,7 @@
 	.tick line {
 		@apply bi-stroke-gray-300;
 	}
+
 	.tick .gridline {
 		stroke-dasharray: 0.3, 10;
 		stroke-linecap: round;

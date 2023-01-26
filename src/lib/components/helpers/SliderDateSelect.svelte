@@ -1,11 +1,10 @@
 <script>
 	import { createEventDispatcher } from 'svelte';
+	import { timeFormat, timeParse } from 'd3';
 	export let startDateMin;
 	export let endDateMax;
 	export let name;
 	export let labels;
-	export let endDateId;
-	export let startDateId;
 
 	let defaultLabels = {
 		notSet: 'not set',
@@ -23,7 +22,7 @@
 	}
 	const dispatch = createEventDispatcher();
 	let today = new Date();
-	const todayRfc = timeStampToRfc(today);
+	// const todayRfc = timeStampToRfc(today);
 	const todayTimestamp = dateToTimeStamp(today);
 	const startDateMinTimestamp = dateToTimeStamp(startDateMin);
 	const endDateMaxTimestamp = dateToTimeStamp(endDateMax);
@@ -35,7 +34,6 @@
 	let endDate = '2021-12';
 	let lessThan = false;
 	let greaterThan = false;
-
 	// $: console.log(sliderStartTimestamp);
 
 	function dateOrSliderChange(item) {
@@ -72,6 +70,8 @@
 			greaterThan = false;
 		}
 	}
+	const formatDate = (d) => timeFormat('%b %Y')(timeParse('%Y-%m')(d));
+
 	function timeStampToRfc(date) {
 		if (date) return new Date(date).toJSON().slice(0, 7);
 		return undefined;
@@ -91,12 +91,10 @@
 	};
 </script>
 
-<div
-	class="bi-grid bi-grid-flow-col bi-gap-2 bi-auto-cols-min bi-items-center bi-justify-end bi-justify-items-end"
->
+<div class="bi-grid bi-grid-flow-col bi-gap-0 bi-items-center bi-justify-end ">
 	<div class="bi-grid">
-		<!-- <h1 class="text-sm">From:</h1> -->
-		<input
+		<h1 class="bi-text-sm bi-pb-2 bi-justify-end bi-text-center">{formatDate(startDate)}</h1>
+		<!-- <input
 			type="month"
 			id={startDateId}
 			class="dateSelect"
@@ -107,8 +105,9 @@
 			on:input={() => {
 				dateOrSliderChange('startDate');
 			}}
-		/>
+		/> -->
 		<!-- bind:value={sliderStartTimestamp} -->
+
 		<input
 			type="range"
 			class="sliderStart"
@@ -122,9 +121,11 @@
 			}}
 		/>
 	</div>
+	<h1 class="bi-text-sm bi-pb-2">-</h1>
+
 	<div class="bi-grid">
-		<!-- <h1 class="text-sm">To:</h1> -->
-		<input
+		<h1 class="bi-text-sm bi-pb-2 bi-justify-end bi-text-center">{formatDate(endDate)}</h1>
+		<!-- <input
 			type="month"
 			id={endDateId}
 			class="dateSelect"
@@ -134,7 +135,7 @@
 			on:input={() => {
 				dateOrSliderChange('endDate');
 			}}
-		/>
+		/> -->
 		<input
 			type="range"
 			multiple
@@ -163,26 +164,26 @@
 	.applyButton {
 		width: var(--applyButtonWidth, 25px);
 		height: var(--applyButtonHeight, 25px);
-		background-color: var(--applyButtonBackgroundColor, #007bff);
+		background-color: var(--applyButtonBackgroundColor, #707070);
 		color: var(--applyButtonColor, #fff);
-		padding: var(--applyButtonPadding, 0.5px);
-		margin: 10px;
+		padding: var(--applyButtonPadding, 0px);
+		margin-left: 6px;
 		font-family: roboto;
 		font-size: 0.825em;
 	}
 	.sliderEnd {
-		background: var(--sliderEndBackgroundColor, #007bff);
-		height: var(--sliderEndHeight, 2px);
-		width: var(--sliderEndWidth, 129px);
+		background: var(--sliderEndBackgroundColor, #707070);
+		height: var(--sliderEndHeight, 1px);
+		width: var(--sliderEndWidth, 100px);
 		cursor: pointer;
-		margin: var(--sliderEndMargin, 3px);
+		margin: var(--sliderEndMargin, 0px);
 	}
 	.sliderStart {
-		background: var(--sliderStartBackgroundColor, #007bff);
-		height: var(--sliderStartHeight, 2px);
-		width: var(--sliderStartWidth, 129px);
+		background: var(--sliderStartBackgroundColor, #707070);
+		height: var(--sliderStartHeight, 1px);
+		width: var(--sliderStartWidth, 100px);
 		cursor: pointer;
-		margin: var(--sliderStartMargin, 3px);
+		margin: var(--sliderStartMargin, 0px);
 	}
 	.dateSelect {
 		color: var(--dateSelectColor, #000);
@@ -190,7 +191,7 @@
 		font-weight: var(--dateSelectFontWeight, 300);
 		font-family: roboto;
 		height: var(--dateSelectHeight, 34px);
-		width: var(--dateSelectWidth, 122px);
+		width: var(--dateSelectWidth, 100px);
 		margin-bottom: var(--dateSelectMarginBottom, 5px);
 	}
 	input[type='month']::-webkit-inner-spin-button {
@@ -205,4 +206,11 @@
 	/* .text-blue-600 {
 		color: blueviolet;
 	} */
+	input[type='range']::-webkit-slider-thumb {
+		height: 16px;
+		width: 16px;
+		border-radius: 1px;
+		cursor: pointer;
+		/* margin-top: -14px; You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
+	}
 </style>

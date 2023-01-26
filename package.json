@@ -18,7 +18,8 @@
 		"url": "https://www.sawyer.codes"
 	},
 	"contributors": [
-		"Kazi Awal"
+		"Kazi Awal",
+		"Molly Escobar"
 	],
 	"keywords": [
 		"cmsv",
@@ -41,17 +42,20 @@
 	},
 	"devDependencies": {
 		"@aws-sdk/client-s3": "^3.215.0",
+		"@bulatdashiev/svelte-slider": "^1.0.3",
 		"@rollup/plugin-dsv": "^3.0.1",
 		"@sveltejs/svelte-scroller": "^2.0.7",
 		"@sveltejs/vite-plugin-svelte": "^1.2.0",
 		"@tailwindcss/typography": "^0.5.2",
 		"autoprefixer": "^10.4.13",
+		"body-scroll-lock": "^3.1.5",
 		"compression": "^1.7.4",
 		"cssnano": "^5.1.14",
 		"d3": "^7.6.1",
 		"dotenv": "^16.0.3",
 		"eslint": "^8.28.0",
 		"eslint-plugin-svelte3": "^4.0.0",
+		"focus-trap": "^6.9.3",
 		"journalize": "^2.5.1",
 		"layercake": "^7.1.0",
 		"lodash": "^4.17.21",
@@ -74,13 +78,21 @@
 	},
 	"dependencies": {
 		"archieml": "^0.5.0",
+		"define": "^1.0.1",
 		"fetch": "^1.1.0",
 		"google-spreadsheet": "^3.3.0",
 		"html-entities": "^2.3.3",
 		"htmlparser2": "^8.0.1",
+		"jquery": "^3.6.3",
+		"jquery-ui": "^1.13.2",
+		"jquery-ui-bundle": "^1.12.1-migrate",
+		"jquery-ui-dist": "^1.13.2",
+		"jquery-ui-slider": "^1.12.1",
 		"node-fetch": "^3.3.0",
 		"s-date-range-picker": "^0.3.0",
+		"sharp": "^0.30.6",
 		"svelte-date-range-select": "^1.0.4",
+		"yargs": "^17.5.1",
 		"yootils": "^0.3.1"
 	}
 }

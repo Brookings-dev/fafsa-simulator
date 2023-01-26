@@ -12,10 +12,12 @@
 	export let orient = 0;
 
 	export let markerWidth;
+
+	export let annotations = [];
 </script>
 
 <marker
-	id="arrowhead"
+	id="arrowheadJan"
 	viewBox="0 0 81.6 55.4"
 	preserveAspectRatio="none"
 	{markerWidth}
@@ -23,6 +25,7 @@
 	{orient}
 	refX="41"
 	refY="2"
+	{annotations}
 >
 	<!-- <path d="M-6,-6 L 0,0 L -6,6" {fill} {stroke} /> -->
 	<polygon

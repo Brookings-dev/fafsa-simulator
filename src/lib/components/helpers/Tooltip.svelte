@@ -10,7 +10,7 @@
 	export let parentContainer = false;
 
 	let pageWidth = 300;
-	let tipWidth = 0; // width of the tooltip
+	export let tipWidth = 200; // width of the tooltip
 	let cursor = { x: 0, y: 0 }; // cursor pos
 
 	const mousemove = (e) => {
@@ -24,19 +24,20 @@
 	$: reflectionX = parentContainer
 		? parentContainer.offsetLeft + parentContainer.offsetWidth / 2
 		: pageWidth / 2;
-	$: left = cursor.x < reflectionX ? cursor.x + margin : cursor.x - margin - tipWidth;
-	$: top = cursor.y + margin;
+
+	$: left = cursor.x - tipWidth / 2;
+
+	// $: console.log(left);
 </script>
 
 <svelte:window on:mousemove={mousemove} bind:innerWidth={pageWidth} />
 
 {#if cursor.x !== 0 && cursor.y !== 0}
 	<div
-		class="tooltip bi-bg-white bi-text-primary bi-fixed bi-border-solid bi-border-[1px] bi-border-gray-dark bi-rounded-md bi-shadow-tooltip bi-text-left bi-p-2 bi-z-40 bi-pointer-events-none bi-text-base bi-font-regular bi-max-w-[200px] bi-w-auto"
-		style="left:{left}px;top:{top}px;"
+		class="tooltip bi-bg-[#F2F2F2] bi-text-primary bi-fixed bi-border-solid bi-border-[1px] bi-border-[#CCCCCC] bi-rounded-md bi-drop-shadow-lg bi-p-2 bi-z-40 bi-pointer-events-none bi-text-base bi-font-regular bi-max-w-[200px] bi-w-auto"
+		style="left:{left}px;top:200px;"
 		bind:offsetWidth={tipWidth}
 	>
-		<slot {cursor} {tipWidth} {pageWidth} />
-		<!-- <line class="tooltip-gridline" y1={400 * -1} y2="50" x1={-100} x2="300" /> -->
+		<slot {cursor} {pageWidth} {tipWidth} />
 	</div>
 {/if}

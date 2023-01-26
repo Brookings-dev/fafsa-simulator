@@ -5,12 +5,16 @@
 <script>
 	import { getContext } from 'svelte';
 	const { width, height, xScale, yRange, yScale } = getContext('LayerCake');
+	import { timeFormat, timeParse, max } from 'd3';
 
 	/** @type {Boolean} [gridlines=true] - Extend lines from the ticks into the chart space */
 	export let gridlines = true;
 
 	/** @type {Boolean} [tickMarks=false] - Show a vertical mark for each tick. */
-	export let tickMarks = false;
+	export let tickMarksIdeo = false;
+
+	/** @type {Boolean} [tickMarks=false] - Show a vertical mark for each tick. */
+	export let tickMarksFraud = false;
 
 	/** @type {Boolean} [baseline=false] – Show a solid line at the bottom. */
 	export let baseline = false;
@@ -39,6 +43,8 @@
 	/** @type {String} [fontSize=''] - Change size of font in label. */
 	export let fontSize = '0.875rem';
 
+	export let tickMarksCovid = false;
+
 	$: isBandwidth = typeof $xScale.bandwidth === 'function';
 
 	$: tickVals = Array.isArray(ticks)
@@ -60,29 +66,57 @@
 		}
 		return 'middle';
 	}
+	const checkMonth = (d) => timeFormat('%b')(timeParse('%Y-%V')(d));
+	const checkWeek = (d) => timeFormat('%V')(timeParse('%Y-%V')(d));
+	const checkDate = (d) => timeFormat('%b %V')(timeParse('%Y-%V')(d));
 </script>
 
 <g class="axis x-axis" class:snapTicks>
 	{#each tickVals as tick, i (tick)}
 		<g class="tick tick-{i}" transform="translate({$xScale(tick)},{Math.max(...$yRange)})">
 			{#if gridlines !== false}
-				<line class="gridline" y1={$height * -1} y2="0" x1="0" x2="0" />
+				<line class="gridline {tick}" y1={$height * -1} y2="0" x1="0" x2="0" />
 			{/if}
-			{#if tickMarks === true}
-				<line
-					class="tick-mark"
-					y1={0}
-					y2={6}
-					x1={xTick || isBandwidth ? $xScale.bandwidth() / 2 : 0}
-					x2={xTick || isBandwidth ? $xScale.bandwidth() / 2 : 0}
-				/>
+			{#if tickMarksIdeo == true}
+				{#if timeFormat('%b')(timeParse('%Y-%m')(tick)) == 'Jan' || timeFormat('%b %Y')(timeParse('%Y-%m')(tick)) == 'Dec 2021'}
+					<line
+						class="bi-tick-mark-{i} bi-z-100 bi-stroke-[#333333]"
+						y1={0}
+						y2={6}
+						x1={xTick || isBandwidth ? $xScale.bandwidth() / 2 : 0}
+						x2={xTick || isBandwidth ? $xScale.bandwidth() / 2 : 0}
+					/>
+				{/if}
 			{/if}
+			{#if tickMarksCovid == true}
+				{#if (checkMonth(tick) == 'Feb' && checkWeek(tick) == 8) || (checkMonth(tick) == 'May' && checkWeek(tick) == 20) || (checkMonth(tick) == 'Aug' && checkWeek(tick) == 33) || (checkMonth(tick) == 'Nov' && checkWeek(tick) == 47 && tick != '2020-06')}
+					<line
+						class="bi-tick-mark-{tick} bi-z-100 bi-stroke-[#333333]"
+						y1={0}
+						y2={6}
+						x1={xTick || isBandwidth ? $xScale.bandwidth() / 2 : 0}
+						x2={xTick || isBandwidth ? $xScale.bandwidth() / 2 : 0}
+					/>
+				{/if}
+			{/if}
+			{#if tickMarksFraud == true}
+				{#if timeFormat('%V')(tick) == 34 || timeFormat('%V')(tick) == 38 || timeFormat('%V')(tick) == 42 || timeFormat('%V')(tick) == 46 || timeFormat('%V')(tick) == 50 || timeFormat('%V')(tick) == 1}
+					<line
+						class="bi-tick-mark-{tick} bi-z-100 bi-stroke-[#333333]"
+						y1={0}
+						y2={6}
+						x1={xTick || isBandwidth ? $xScale.bandwidth() / 2 : 0}
+						x2={xTick || isBandwidth ? $xScale.bandwidth() / 2 : 0}
+					/>
+				{/if}
+			{/if}
+
 			<text
 				x={xTick || isBandwidth ? $xScale.bandwidth() / 2 : 0}
-				y={yTick}
+				y={25}
 				dx=""
 				dy=""
-				style="font-size: {fontSize}; fill: {fontColor}"
+				style="font-size: {fontSize}; fill: {fontColor};"
 				text-anchor={textAnchor(i)}>{formatTick(tick)}</text
 			>
 			<text
@@ -99,7 +133,7 @@
 	{/each}
 
 	{#if baseline === true}
-		<line class="baseline" y1={$height + 0.5} y2={$height + 0.5} x1="0" x2={$width} />
+		<line class="baseline bi-z-60" y1={$height + 0.5} y2={$height + 0.5} x1="0" x2={$width} />
 	{/if}
 </g>
 
@@ -109,11 +143,9 @@
 		font-weight: 400;
 		color: #333333;
 	}
+
 	.tick line {
-		fill: #333333;
-	}
-	.tick .gridline {
-		stroke-dasharray: 2;
+		@apply bi-stroke-gray-300;
 	}
 	.tick text {
 		color: #333333;
@@ -125,5 +157,20 @@
 	}
 	.baseline {
 		stroke: #333333;
+	}
+	.tick .gridline {
+		stroke-dasharray: 0.3, 10;
+		stroke-linecap: round;
+		stroke-width: 2;
+	}
+	/* .tick-mark {
+		stroke-dasharray: 2;
+	} */
+	/* This looks slightly better */
+	.axis.snapTicks .tick:last-child text {
+		transform: translateX(3px);
+	}
+	.axis.snapTicks .tick.tick-0 text {
+		transform: translateX(-3px);
 	}
 </style>
