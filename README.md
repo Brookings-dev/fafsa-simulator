@@ -1,10 +1,21 @@
 # **CMS**velte
 
-A [Svelte](https://svelte.dev/) starter template built with newsroom CMS's in mind. Dynamically create inline graphics based on the placement of `figure` elements with defined *data-cmsvelte* attributes.
+This was built for the Brookings Institution using a cmsvelte kit, details below.
+
+Data and Research: Valerie Wirtschafter
+Design: Shavanthi Mendis
+Code and Development: Molly Cook Escobar
+
+A few things to note:
+
+- Charts need to be wrapped in the <div class="content-well"></div> tag in order to avoid errors in height and width within the essay template.
+- Slider.svelte was used for the date picker, but and alternative SliderDateSelect.svelte was left for future reference.
+
+A [Svelte](https://svelte.dev/) starter template built with newsroom CMS's in mind. Dynamically create inline graphics based on the placement of `figure` elements with defined _data-cmsvelte_ attributes.
 
 Inspired by graphics rigs at Bloomberg, The Pudding, and The Wall Street Journal. Created with the help of [Kazi Awal](https://github.com/superKazi).
 
- *Previously known as tiny-svelte*.
+_Previously known as tiny-svelte_.
 
 ## Local env requirements
 
@@ -38,7 +49,7 @@ This template has out-of-the-box features to help with consuming data from googl
 Directly import csv's into your .svelte file via [@rollup/plugin-dsv](https://www.npmjs.com/package/@rollup/plugin-dsv)
 
 ```js
-import data from '$lib/data/data.csv'
+import data from '$lib/data/data.csv';
 ```
 
 ### `npm run fetch:copy`
@@ -50,7 +61,7 @@ Like a lot of newsrooms, this uses a Google Doc and ArchieMl approach to make co
 Import copy into your package like any JSON file
 
 ```js
-import copy from '$lib/data/copy.json'
+import copy from '$lib/data/copy.json';
 ```
 
 ## Development
@@ -67,9 +78,9 @@ Modify content in `src`.
 
 CMSvelte's power is dynamic placement unrestrained by content. After build, you can place the `<figure data-cmsvelte="CHART-ID">` elements anywhere in the CMS and they will load.
 
-To place graphics, edit `index.html` by adding or removing figures such as this: `<figure data-cmsvelte="CHART-ID"></figure>`. 
+To place graphics, edit `index.html` by adding or removing figures such as this: `<figure data-cmsvelte="CHART-ID"></figure>`.
 
-Then, in `src/main.js`, import your wrapper component up top and add the applicable data to the component array. Every object in this array should have 1) a matching `<figure>` element in index.html and 2) an imported component: 
+Then, in `src/main.js`, import your wrapper component up top and add the applicable data to the component array. Every object in this array should have 1) a matching `<figure>` element in index.html and 2) an imported component:
 
 ```js
 const components = [
@@ -87,18 +98,19 @@ const components = [
 		chartID: 'CHART-ID3',
 		Component: ImportedComponent3,
 		props: {}
-	},
+	}
 ];
 ```
 
-*Notes:* 
+_Notes:_
+
 - High-level props can be passed down here as well using the `props: {}` object passed in MountComponent.
 
 ### Writing styles
 
 It's recommended to include the CMS's styles in a development environment and defer to them for fonts and classes to reduce the shipped CSS. This can be done by adding objects to a `cmsFiles` array in `main.js`. This appends any tag and it's listed attributes to the `<head>` while in dev mode. These are not included in production.
 
-Otherwise, this template uses [Tailwind](https://tailwindcss.com/) for out-of-the-box classes that we don't have to think about. By default, these classes are prefixed with `cmsvelte-` to prevent clashing with CMS classes. This can be changed in `tailwind.config.cjs`. 
+Otherwise, this template uses [Tailwind](https://tailwindcss.com/) for out-of-the-box classes that we don't have to think about. By default, these classes are prefixed with `cmsvelte-` to prevent clashing with CMS classes. This can be changed in `tailwind.config.cjs`.
 
 Write global styles in `app.postcss`. Otherwise, use [Svelte's built-in scroped styling syntax](https://svelte.dev/tutorial/styling).
 
@@ -106,14 +118,14 @@ Write global styles in `app.postcss`. Otherwise, use [Svelte's built-in scroped 
 
 For image optimization see [vite-imagetools](https://www.npmjs.com/package/vite-imagetools) or [sharp](https://www.npmjs.com/package/sharp).
 
-[Vite's Static Asset Handling](https://vitejs.dev/guide/assets.html) lets us import image and SVG files with several options. 
+[Vite's Static Asset Handling](https://vitejs.dev/guide/assets.html) lets us import image and SVG files with several options.
 
 #### As files
 
 Imports the hashed file name for the asset. For example, `imgUrl` will be `/img.png` during development, and become `/assets/img.2d8efhg.png` in the production build.
 
 ```js
-import imgUrl from '$lib/assets/img.png'
+import imgUrl from '$lib/assets/img.png';
 ```
 
 #### As strings
@@ -121,7 +133,7 @@ import imgUrl from '$lib/assets/img.png'
 Import raw strings by appending ?raw at the end. This is useful for SVG files.
 
 ```js
-import imgUrl from '$lib/assets/img.svg?raw'
+import imgUrl from '$lib/assets/img.svg?raw';
 ```
 
 ### Useful libs
@@ -155,9 +167,9 @@ The resulting `build/index.html` file is what can be embedded. It should look so
 
 ```html
 <script type="module" crossorigin src="https://www.site.com/path/to/index.js"></script>
-<link rel="modulepreload" href="https://www.site.com/path/to/vendor.js">
-<link rel="stylesheet" href="https://www.site.com/path/to/vendor.css">
-<link rel="stylesheet" href="https://www.site.com/path/to/index.css">
+<link rel="modulepreload" href="https://www.site.com/path/to/vendor.js" />
+<link rel="stylesheet" href="https://www.site.com/path/to/vendor.css" />
+<link rel="stylesheet" href="https://www.site.com/path/to/index.css" />
 
 <figure data-cmsvelte="castle-img"></figure>
 <figure data-cmsvelte="bar-chart"></figure>
@@ -165,4 +177,3 @@ The resulting `build/index.html` file is what can be embedded. It should look so
 ```
 
 Scripts and styles should be embedded once anywhere in the CMS. The `<figure data-cmsvelte="">` elements can be moved around as needed and do not need to live side-by-side. The `index.js` script will generate the graphics accordingly based on the `data-cmsvelte` attribute.
-
