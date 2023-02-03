@@ -57,7 +57,7 @@
 						<i class="fas fa-times bi-text-[#003A70] outline-none" />
 					</button>
 				</div>
-				<section class="bi-px-8 bi-pb-6">
+				<section class="bi-mx-4">
 					<slot name="modal-content">
 						<p>placeholder text</p>
 					</slot>

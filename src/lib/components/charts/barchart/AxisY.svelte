@@ -5,7 +5,7 @@
 <script>
 	import { getContext } from 'svelte';
 
-	const { padding, xRange, yScale } = getContext('LayerCake');
+	const { padding, xRange, yScale, width } = getContext('LayerCake');
 
 	/** @type {Boolean} [gridlines=true] - Extend lines from the ticks into the chart space */
 	export let gridlines = true;
@@ -17,7 +17,7 @@
 	export let formatTick = (d) => d;
 
 	/** @type {Number|Array|Function} [ticks=4] - If this is a number, it passes that along to the [d3Scale.ticks](https://github.com/d3/d3-scale) function. If this is an array, hardcodes the ticks to those values. If it's a function, passes along the default tick values and expects an array of tick values in return. */
-	export let ticks = 4;
+	export let ticks = 5;
 
 	/** @type {Number} [xTick=0] - How far over to position the text marker. */
 	export let xTick = 0;
@@ -33,6 +33,8 @@
 
 	/** @type {String} [textAnchor='start'] The CSS `text-anchor` passed to the label. This is automatically set to "end" if the scale has a bandwidth method, like in ordinal scales. */
 	export let textAnchor = 'start';
+
+	export let rightAxis;
 
 	$: isBandwidth = typeof $yScale.bandwidth === 'function';
 
@@ -54,7 +56,7 @@
 			{#if gridlines !== false}
 				<line
 					class="gridline"
-					x2="100%"
+					x2="97.5%"
 					x1="30"
 					y1={yTick + (isBandwidth ? $yScale.bandwidth() / 2 : 0)}
 					y2={yTick + (isBandwidth ? $yScale.bandwidth() / 2 : 0)}
@@ -76,6 +78,18 @@
 				dy={isBandwidth ? 4 : dyTick}
 				style="text-anchor:{isBandwidth ? 'end' : textAnchor};">{formatTick(tick)}</text
 			>
+			{#if rightAxis == true}
+				<g class="axis y-axis-mobile" transform="translate({$width + $padding.right}, 0)">
+					<text
+						class="mobileYAxis"
+						x={xTick}
+						y={yTick + (isBandwidth ? $yScale.bandwidth() / 2 : 0)}
+						dx={isBandwidth ? -9 : dxTick}
+						dy={isBandwidth ? 4 : dyTick}
+						style="text-anchor:{isBandwidth ? 'end' : textAnchor};">{formatTick(tick)}</text
+					>
+				</g>
+			{/if}
 		</g>
 	{/each}
 </g>

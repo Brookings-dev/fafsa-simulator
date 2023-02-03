@@ -21,8 +21,8 @@
 	viewBox="0 0 81.6 55.4"
 	preserveAspectRatio="none"
 	{markerWidth}
-	markerHeight="60"
 	{orient}
+	markerHeight="60"
 	refX="41"
 	refY="2"
 	{annotations}

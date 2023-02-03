@@ -23,6 +23,9 @@
 	export let getLeft = (d) => d.left;
 	export let getTop = (d) => d.top;
 
+	export let findMidpoint;
+	export let findMidElection;
+
 	let container;
 	let markerWidth = 70;
 
@@ -47,9 +50,9 @@
 			{#each anno.arrows as arrow}
 				<line
 					class="anno-line"
-					x1={$xScale(timeParse('%Y-%V')(arrow)) + 7}
+					x1={$xScale(timeParse('%Y-%V')(arrow))}
 					y1={$height * 0.05}
-					x2={$xScale(timeParse('%Y-%V')(arrow)) + 7}
+					x2={$xScale(timeParse('%Y-%V')(arrow))}
 					y2={$height}
 					{stroke}
 					marker-start={getText1(anno) == 'JAN' ? 'url(#arrowheadJan)' : 'url(#arrowhead)'}
@@ -59,8 +62,8 @@
 		<text
 			class="text-annotation"
 			x={getText1(anno) == 'JAN'
-				? $xScale(timeParse('%Y-%V')(getLeft(anno))) - markerWidth / 10
-				: $xScale(timeParse('%Y-%V')(getLeft(anno))) - markerWidth / 3}
+				? $xScale(timeParse('%Y-%V')(getLeft(anno))) - markerWidth / 5
+				: $xScale(timeParse('%Y-%V')(getLeft(anno))) - markerWidth / 2.3}
 			y={$height - ($height - getTop(anno) * 2)}
 		>
 			<tspan class="text-break">{getText1(anno)}</tspan>
@@ -68,8 +71,8 @@
 		<text
 			class="text-annotation"
 			x={getText1(anno) == 'JAN'
-				? $xScale(timeParse('%Y-%V')(getLeft(anno))) - markerWidth / 15
-				: $xScale(timeParse('%Y-%V')(getLeft(anno))) - markerWidth / 8.5}
+				? $xScale(timeParse('%Y-%V')(getLeft(anno))) - markerWidth / 6
+				: $xScale(timeParse('%Y-%V')(getLeft(anno))) - markerWidth / 5}
 			y={$height - ($height - getTop(anno) * 2.85)}
 		>
 			<tspan class="text-break">{getText2(anno)}</tspan>

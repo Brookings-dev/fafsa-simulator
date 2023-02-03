@@ -6,6 +6,35 @@
 	export let name;
 	export let labels;
 
+	//////component for the main file
+	// <SliderDateSelect
+	// 			--applyButtonWidth="54px"
+	// 			--applyButtonHeight="30px"
+	// 			startDateMin="2012-12"
+	// 			endDateMax="2021-12"
+	// 			on:onApplyDateRange={handleApplyDateRange}
+	// 		/>
+
+	//////to use this, function for the maine file
+	// const handleApplyDateRange = (thisDate) => {
+	// 	console.log(thisDate);
+	// 	start = timeFormat('%Y-%m')(timeParse('%Y-%m')(thisDate.detail.startDate));
+	// 	end = timeFormat('%Y-%m')(timeParse('%Y-%m')(thisDate.detail.endDate));
+	// 	const timeout = setTimeout(() => {
+	// 		options = filteredData
+	// 			.map((option) => {
+	// 				return {
+	// 					month_year: option.month_year,
+	// 					'More Conservative': { value: option['More Conservative'], color: '#F55D5B' },
+	// 					'More Liberal': { value: option['More Liberal'], color: '#16659D' },
+	// 					Moderate: { value: option.Moderate, color: '#FDDB46' },
+	// 					Unknown: { value: option.Unknown, color: '#B3B3B3' }
+	// 				};
+	// 			})
+	// 			.filter((d) => d.month_year >= start && d.month_year <= end);
+	// 	}, 200);
+	// };
+
 	let defaultLabels = {
 		notSet: 'not set',
 		greaterThan: 'greater than',
@@ -93,7 +122,9 @@
 
 <div class="bi-grid bi-grid-flow-col bi-gap-0 bi-items-center bi-justify-end ">
 	<div class="bi-grid">
-		<h1 class="bi-text-sm bi-pb-2 bi-justify-end bi-text-center">{formatDate(startDate)}</h1>
+		<h1 class="chart-title bi-text-sm bi-pb-2 bi-justify-end bi-text-center">
+			{formatDate(startDate)}
+		</h1>
 		<!-- <input
 			type="month"
 			id={startDateId}
@@ -121,10 +152,12 @@
 			}}
 		/>
 	</div>
-	<h1 class="bi-text-sm bi-pb-2">-</h1>
+	<h1 class="chart-title bi-text-sm bi-pb-2">-</h1>
 
 	<div class="bi-grid">
-		<h1 class="bi-text-sm bi-pb-2 bi-justify-end bi-text-center">{formatDate(endDate)}</h1>
+		<h1 class="chart-title bi-text-sm bi-pb-2 bi-justify-end bi-text-center">
+			{formatDate(endDate)}
+		</h1>
 		<!-- <input
 			type="month"
 			id={endDateId}

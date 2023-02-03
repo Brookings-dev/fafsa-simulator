@@ -1,9 +1,9 @@
 <script>
 	// example chart from LayerCake
 	// https://layercake.graphics/example/Bar/
-	import { LayerCake, Svg, flatten, calcExtents } from 'layercake';
+	import { LayerCake, Svg, flatten, Html } from 'layercake';
 	import { scaleBand, scaleOrdinal } from 'd3-scale';
-	import { timeFormat, timeParse, max, rollups, descending } from 'd3';
+	import { timeFormat, timeParse, extent } from 'd3';
 	import { stack, stackOrderReverse } from 'd3-shape';
 	import { tweened } from 'svelte/motion';
 	import { cubicInOut } from 'svelte/easing';
@@ -11,38 +11,37 @@
 	import AxisX from './AxisX.svelte';
 	import AxisY from './AxisY.svelte';
 	import Slider from '$lib/components/helpers/Slider.svelte';
-	import SliderDateSelect from '$lib/components/helpers/SliderDateSelect.svelte';
 	import Tooltip from '$lib/components/helpers/Tooltip.svelte';
-	import TooltipLine from './TooltipLine.svelte';
-	import * as d3 from 'd3';
-	const tweenOptions = {
-		duration: 300,
-		easing: cubicInOut
-	};
-
-	// const { xScale, yRange } = getContext('LayerCake');
-
 	import getKeyColor from '$lib/keyLookup';
-
 	import data from '$lib/data/ideology.csv';
 	import { onMount } from 'svelte';
 
-	const implicit = Symbol('implicit');
-
 	const yKey = [0, 1];
 	const zKey = 'key';
+	const xScale = scaleBand().paddingInner([0.12]).round(false);
 
 	let filteredData = data;
 	let fill;
 	let xKey = 'month_year';
 	let tooltip;
 	let containerWidth;
+	let containerHeight;
 	let parentContainer;
 	let height = 400;
-	$: isMobile = containerWidth < 768;
 	let mounted;
 	let start = '2012-12';
 	let end = '2021-12';
+	let extentVal;
+	let maxVal;
+	let seriesNames = [];
+	let pageWidth;
+	let tipWidth = 200; // width of the tooltip
+	let cursor = { x: 0, y: 0 }; // cursor pos
+	let chartWrapper;
+	let range = [1354320000000, 1638316800000];
+
+	$: isMobile = containerWidth < 768;
+	$: isTablet = containerWidth < 1010;
 
 	onMount(() => (mounted = true));
 
@@ -71,41 +70,29 @@
 		};
 	});
 
-	let extent;
-	let maxVal;
-	$: extent = d3.extent(flatten(series), (d) => d[1]);
-	$: maxVal = Math.ceil(extent[1] / 90) * 100;
-
+	$: extentVal = extent(flatten(series), (d) => d[1]);
+	$: maxVal = Math.ceil(extentVal[1] / 94) * 100;
 	$: seriesNames = Object.keys(filteredData[0]).filter((d) => d !== xKey);
 	$: chosenValues = seriesNames;
-
 	$: seriesColors = ['#F55D5B', '#16659D', '#FDDB46', '#B3B3B3'];
-
 	$: stackData = stack()
 		.order(stackOrderReverse)
 		.keys(chosenValues)
 		.value((obj, key) => obj[key]['value']);
-
 	$: series = stackData(options);
 
-	// const handleApplyDateRange = (thisDate) => {
-	// 	console.log(thisDate);
-	// 	start = timeFormat('%Y-%m')(timeParse('%Y-%m')(thisDate.detail.startDate));
-	// 	end = timeFormat('%Y-%m')(timeParse('%Y-%m')(thisDate.detail.endDate));
-	// 	const timeout = setTimeout(() => {
-	// 		options = filteredData
-	// 			.map((option) => {
-	// 				return {
-	// 					month_year: option.month_year,
-	// 					'More Conservative': { value: option['More Conservative'], color: '#F55D5B' },
-	// 					'More Liberal': { value: option['More Liberal'], color: '#16659D' },
-	// 					Moderate: { value: option.Moderate, color: '#FDDB46' },
-	// 					Unknown: { value: option.Unknown, color: '#B3B3B3' }
-	// 				};
-	// 			})
-	// 			.filter((d) => d.month_year >= start && d.month_year <= end);
-	// 	}, 200);
-	// };
+	const formatDate = (d) => timeFormat('%b %Y')(timeParse('%Y-%m')(d));
+
+	const formatTickX = (tick) =>
+		!isMobile
+			? timeFormat('%b')(timeParse('%Y-%m')(tick)) == 'Jan' ||
+			  timeFormat('%Y')(timeParse('%Y-%m')(tick)) == 'Dec 2021'
+				? timeFormat('%Y')(timeParse('%Y-%m')(tick))
+				: ''
+			: timeFormat('%m')(timeParse('%Y-%m')(tick)) == '01' &&
+			  timeFormat('%Y')(timeParse('%Y-%m')(tick)) % 2 == 0
+			? timeFormat('%Y')(timeParse('%Y-%m')(tick))
+			: '';
 
 	const handleChange = (event) => {
 		let { checked, value } = event.target,
@@ -113,9 +100,7 @@
 			sortOrderValue = ['More Conservative', 'More Liberal', 'Moderate', 'Unknown'],
 			orderingColor = {},
 			sortOrderColor = ['#F55D5B', '#16659D', '#FDDB46', '#B3B3B3'];
-
 		fill = getKeyColor(value);
-
 		if (checked) {
 			chosenValues = [...chosenValues, value];
 			seriesColors = [...seriesColors, fill];
@@ -134,48 +119,33 @@
 			seriesColors = seriesColors.filter((v) => v !== fill);
 		}
 	};
-
 	// this is if you want the scales to update too
-
+	const tweenOptions = {
+		duration: 300,
+		easing: cubicInOut
+	};
 	$: xDomain = tweened(undefined, tweenOptions);
 	$: yDomain = tweened(undefined, tweenOptions);
 
 	// $: console.log({ tooltip });
 
-	let pageWidth;
-	let tipWidth = 200; // width of the tooltip
-	let cursor = { x: 0, y: 0 }; // cursor pos
-	let chartWrapper;
-
-	const xScale = scaleBand().paddingInner([0.12]).round(true);
-
 	const mousemove = (e) => {
 		// find where the cursor is
 		cursor = { x: e.clientX, y: e.clientY };
-		// cursor = { x: e.clientX + 50, y: 200 };
 		// console.log(cursor);
 	};
 	const mouseout = (e) => {
 		cursor = undefined;
 	};
 
-	const formatTickX = (tick) =>
-		timeFormat('%b')(timeParse('%Y-%m')(tick)) == 'Jan' ||
-		timeFormat('%b %Y')(timeParse('%Y-%m')(tick)) == 'Dec 2021'
-			? timeFormat('%b %Y')(timeParse('%Y-%m')(tick))
-			: '';
-
-	let range = [1354320000000, 1638316800000];
-
-	function timeStampToRfc(date) {
+	const timeStampToRfc = (date) => {
 		if (date) return new Date(date).toJSON().slice(0, 7);
 		return undefined;
-	}
+	};
 
 	const handleApplyDoubleDateRange = (thisDate) => {
 		start = timeStampToRfc(thisDate.detail[0]);
 		end = timeStampToRfc(thisDate.detail[1]);
-
 		setTimeout(() => {
 			options = filteredData
 				.map((option) => {
@@ -190,7 +160,6 @@
 				.filter((d) => d.month_year >= start && d.month_year <= end);
 		}, 200);
 	};
-	const formatDate = (d) => timeFormat('%b %Y')(timeParse('%Y-%m')(d));
 </script>
 
 <svelte:window
@@ -202,19 +171,33 @@
 	bind:innerWidth={pageWidth}
 />
 
-<figure bind:clientWidth={containerWidth} bind:this={chartWrapper}>
-	<figcaption>Popular political podcasters have recorded more episodes in recent years</figcaption>
-	<p class="subtitle bi-mb-8">Across 79 prominent political podcast series.</p>
+<figure
+	bind:clientWidth={containerWidth}
+	bind:this={chartWrapper}
+	class={!isTablet ? 'bi-mx-8' : 'bi-mx-1'}
+>
+	<figcaption class="leading-6">
+		Popular political podcasters have recorded more episodes in recent years
+	</figcaption>
+	<p
+		class={!isMobile
+			? 'chart-text subtitle bi-ml-0 bi-text-sm bi-leading-4'
+			: 'chart-text subtitle bi-text-sm bi-mb-3 bi-mt-2 bi-ml-0 bi-leading-3'}
+	>
+		Across 79 prominent political podcast series.
+	</p>
 	<div class="bi-flex bi-flex-row bi-justify-between bi-items-center">
 		<ul
-			class="bi-flex bi-flex-row bi-gap-2 bi-flex-2 bi-list-none before:bi-content-none after:bi-content-none bi-content-none"
+			class={!isMobile
+				? 'chart-list bi-flex bi-m-0 bi-max-w-[500px] bi-flex-row bi-list-none before:bi-content-none after:bi-content-none bi-content-none'
+				: 'chart-list bi-flex bi-flex-row bi-flex-wrap bi-list-none before:bi-content-none after:bi-content-none bi-content-none bi-m-0'}
 		>
 			{#each Object.entries(options[0]) as [value, { color, order }]}
 				{#if value !== 'month_year' && value !== 'Total'}
-					<li class="bi-relative">
+					<li class="chart-list bi-relative bi-list-none">
 						<input
 							type="checkbox"
-							class="bi-sr-only bi-peer bi-flex bi-p-0 bi-bg-white bi-border bi-border-gray-300 bi-rounded-sm bi-cursor-pointer focus:bi-outline-none hover:bi-bg-gray-50 peer-checked:bi-ring-2 peer-checked:bi-border-transparent"
+							class="bi-sr-only bi-z-0 bi-peer bi-flex bi-p-0 bi-bg-white bi-border bi-border-gray-300 bi-rounded-sm bi-cursor-pointer focus:bi-outline-none md:hover:bi-bg-gray-50 peer-checked:bi-ring-2 peer-checked:bi-border-transparent"
 							name={order}
 							{value}
 							{order}
@@ -223,11 +206,11 @@
 							on:change={handleChange}
 						/>
 						<div
-							class="bi-absolute bi-w-3.5 bi-h-3.5 bi-right-3 bi-top-2 peer-checked:bi-block peer-checked:bi-bg-[{color}] bi-z-40 peer-hover:bi-opacity-50 bi-bg-bi-gray-light bi-left-2"
+							class="bi-absolute bi-w-3.5 bi-h-3.5 bi-right-3 bi-left-2 bi-top-2 peer-checked:bi-block peer-checked:bi-bg-[{color}] bi-z-10 md:peer-hover:bi-opacity-50 bi-bg-bi-gray-light bi-z-[2]"
 							for={value}
 						/>
 						<label
-							class="bi-flex bi-pl-7 hover:bi-drop-shadow-lg bi-bg-white bi-border bi-border-gray-300 bi-cursor-pointer bi-text-sm bi-self-center bi-justify-self-center bi-text-center bi-p-1 bi-font-sans"
+							class="bi-flex bi-leading-3 bi-pl-7 md:hover:bi-drop-shadow-lg bi-bg-white bi-border bi-border-gray-300 bi-cursor-pointer bi-text-sm bi-self-center bi-justify-self-center bi-text-center bi-p-2 bi-font-sans"
 							for={value}
 						>
 							{value}</label
@@ -236,40 +219,41 @@
 				{/if}
 			{/each}
 		</ul>
-		<div class="bi-gap-2 bi-flex-1 bi-justify-end">
-			<!-- <SliderDateSelect
-				--applyButtonWidth="54px"
-				--applyButtonHeight="30px"
-				startDateMin="2012-12"
-				endDateMax="2021-12"
-				on:onApplyDateRange={handleApplyDateRange}
-			/> -->
-			<div class="bi-grid bi-justify-end">
-				<div class="bi-grid">
-					<h1 class="bi-text-sm bi-text-center bi-leading-none bi-pointer-events-none">
-						{formatDate(start)} &nbsp; &#8212; &nbsp; {formatDate(end)}
-					</h1>
-					<!-- <h1 class="bi-text-sm bi-pb-2 bi-justify-end bi-text-center">
-				{formatDate(start)} - {formatDate(end)}
-			</h1> -->
-					<Slider
-						class="svelte-slider"
-						bind:value={range}
-						range
-						order
-						startDateMin="2012-12"
-						endDateMax="2021-12"
-						on:input={handleApplyDoubleDateRange}
-					/>
+		{#if !isMobile}
+			<div class="bi-flex shrink-0 bi-justify-end">
+				<div class="bi-grid bi-justify-end">
+					<div class="bi-grid">
+						<h1
+							class="bi-text-sm chart-title bi-text-center bi-leading-none bi-pointer-events-none"
+						>
+							{formatDate(start)} &nbsp; &#8212; &nbsp; {formatDate(end)}
+						</h1>
+						<Slider
+							class="svelte-slider"
+							bind:value={range}
+							range
+							order
+							startDateMin="2012-12"
+							endDateMax="2021-12"
+							on:input={handleApplyDoubleDateRange}
+						/>
+					</div>
 				</div>
 			</div>
-		</div>
+		{/if}
 	</div>
-	<div class="bi-chart-container bi-w-full" style="height: {height}px;" bind:this={parentContainer}>
+	<div
+		class={!isMobile
+			? 'bi-chart-container bi-max-w-[1000px]'
+			: 'bi-chart-container bi-max-w-[1000px] bi-pb-2'}
+		style="height:400px;"
+		bind:this={parentContainer}
+		bind:clientHeight={containerHeight}
+	>
 		{#if mounted}
 			<LayerCake
-				padding={{ top: 20, right: 0, bottom: 20, left: 20 }}
-				x={(d) => d.data[xKey]}
+				padding={{ top: 40, right: 0, bottom: 20, left: 20 }}
+				x={(d) => d.data['month_year']}
 				y={yKey}
 				z={zKey}
 				{xScale}
@@ -284,13 +268,17 @@
 			>
 				<Svg>
 					<AxisX
-						tickMarksIdeo={true}
+						tickMarksIdeo={!isMobile ? true : false}
+						tickMarksIdeoMobile={!isMobile ? false : true}
 						gridlines={false}
 						baseline={true}
 						fontColor="#333333"
 						formatTick={formatTickX}
+						label={'Month/Year'}
+						dyLabel={!isMobile ? 35 : 25}
+						centerLabel={true}
 					/>
-					<AxisY ticks={7} gridlines={true} textAnchor="start" dyTick="4" xTick="0" />
+					<AxisY ticks={5} gridlines={true} textAnchor="start" dyTick="4" xTick="0" />
 					<ColumnStacked
 						on:pointerover={(e) => {
 							// console.log('pointerover', e.detail);
@@ -302,66 +290,85 @@
 					/>
 					{#if cursor.x !== 0 && cursor.y !== 0}
 						{#if !!tooltip}
-							<TooltipLine tick={tooltip.month_year} />
+							<!-- <TooltipLine tick={tooltip.month_year} lineHeight={cursor.y} /> -->
 						{/if}
 					{/if}
 				</Svg>
 			</LayerCake>
 		{/if}
 	</div>
-	<p class="footnote">
+	{#if isMobile}
+		<div class="bi-grid bi-justify-center bi-pb-0 bi-pt-4">
+			<h1
+				class="bi-text-sm chart-title bi-text-center bi-mt-3 bi-leading-none bi-pointer-events-none"
+			>
+				{formatDate(start)} &nbsp; &#8212; &nbsp; {formatDate(end)}
+			</h1>
+			<Slider
+				class="svelte-slider"
+				bind:value={range}
+				range
+				order
+				startDateMin="2012-12"
+				endDateMax="2021-12"
+				on:input={handleApplyDoubleDateRange}
+			/>
+		</div>
+	{/if}
+	<p
+		class={!isMobile
+			? 'chart-text footnote-chart bi-mt-14 bi-leading-4 bi-text-xs'
+			: 'chart-text footnote-chart bi-mt-4 bi-leading-4 bi-text-xs'}
+	>
 		<b class="bolded">Source:</b> Author's collection of available podcast episodes.
 	</p>
 </figure>
 
 {#if !!tooltip}
-	<Tooltip {tipWidth} parentContainer={chartWrapper}>
-		<!-- <section> -->
-		<h1 class="bi-text-[#003A70] bi-font-bold bi-text-sm bi-m-1 bi-mb-2">
+	<Tooltip tipHeight={containerHeight} {tipWidth} parentContainer={chartWrapper} {height}>
+		<h1 class="bi-text-[#003A70] chart-title bi-font-bold bi-text-sm bi-m-1 bi-mb-2">
 			{timeFormat('%B %Y')(timeParse('%Y-%m')(tooltip.month_year))}
 		</h1>
 		{#if chosenValues.includes('More Conservative') && tooltip['More Conservative'].value != 0}
-			<div class="bi-flex bi-my-1 bi-justify-between bi-text-sm">
-				<p class="bi-mx-1">More Conservative:</p>
+			<div class="bi-flex bi-my-1 bi-justify-between bi-items-center">
+				<p class="chart-text bi-mx-1 bi-my-0 bi-text-sm bi-leading-3">More Conservative:</p>
 				<p
-					class="bi-w-[40px] bi-font-semibold bi-text-center bi-px-2 bi-mx-1 bi-text-white bi-bg-[#EA3C3C]"
+					class="chart-text bi-w-[40px] bi-my-0 bi-text-sm bi-leading-3 bi-py-[.3rem] bi-font-semibold bi-text-center bi-px-0 bi-mx-1 bi-text-white bi-bg-[#EA3C3C]"
 				>
 					{tooltip['More Conservative'].value}
 				</p>
 			</div>
 		{/if}
 		{#if chosenValues.includes('More Liberal') && tooltip['More Liberal'].value != 0}
-			<div class="bi-flex bi-my-1 bi-justify-between bi-text-sm">
-				<p class="bi-mx-1">More Liberal:</p>
+			<div class="bi-flex bi-my-1 bi-justify-between bi-items-center">
+				<p class="chart-text bi-mx-1 bi-my-0 bi-text-sm bi-leading-3">More Liberal:</p>
 				<p
-					class="bi-w-[40px] bi-font-semibold bi-text-center bi-px-2 bi-mx-1 bi-text-white bi-bg-[#1E7AB9]"
+					class="chart-text bi-w-[40px] bi-leading-3 bi-text-sm bi-py-[.3rem] bi-my-0 bi-font-semibold bi-text-center bi-px-0 bi-mx-1 bi-text-white bi-bg-[#1E7AB9]"
 				>
 					{tooltip['More Liberal'].value}
 				</p>
 			</div>
 		{/if}
 		{#if chosenValues.includes('Moderate') && tooltip['Moderate'].value != 0}
-			<div class="bi-flex bi-my-1 bi-justify-between bi-text-sm">
-				<p class="bi-mx-1">Moderate:</p>
+			<div class="bi-flex bi-my-1 bi-justify-between bi-items-center">
+				<p class="chart-text bi-mx-1 bi-my-0 bi-text-sm bi-leading-3">Moderate:</p>
 				<p
-					class="bi-w-[40px] bi-font-semibold bi-text-center bi-px-2 bi-mx-1 bi-text-white bi-bg-[#C6A634]"
+					class="chart-text bi-w-[40px] bi-text-sm bi-my-0 bi-leading-3 bi-py-[.3rem] bi-font-semibold bi-text-center bi-px-0 bi-mx-1 bi-text-white bi-bg-[#C6A634]"
 				>
 					{tooltip.Moderate.value}
 				</p>
 			</div>
 		{/if}
 		{#if chosenValues.includes('Unknown') && tooltip['Unknown'].value != 0}
-			<div class="bi-flex bi-my-1 bi-justify-between bi-text-sm">
-				<p class="bi-mx-1">Unknown:</p>
+			<div class="bi-flex bi-my-1 bi-justify-between bi-items-center">
+				<p class="chart-text bi-mx-1 bi-text-sm bi-my-0 bi-leading-3">Unknown:</p>
 				<p
-					class="bi-w-[40px] bi-font-semibold bi-text-center bi-px-2 bi-mx-1 bi-text-white bi-bg-[#999999]"
+					class="chart-text bi-w-[40px] bi-text-sm bi-my-0 bi-leading-3 bi-py-[.3rem] bi-font-semibold bi-text-center bi-px-0 bi-mx-1 bi-text-white bi-bg-[#999999]"
 				>
 					{tooltip.Unknown.value}
 				</p>
 			</div>
 		{/if}
-
-		<!-- </section> -->
 	</Tooltip>
 {/if}
 

@@ -2,25 +2,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-header {
-	text-align: center;
-	max-width: 640px;
-	margin: 0 auto;
-}
-h1 {
+
+.chart-title {
 	font-size: 2rem;
-	/* font-weight: bold; */
 	font-family: roboto;
 	letter-spacing: 1px;
 }
-h2 {
-	font-size: 1.2rem;
-	/* font-weight: bold; */
-	font-family: roboto;
-	letter-spacing: 1px;
-	padding: 40px 0px 40px 0px;
-}
-p {
+
+.chart-text {
 	font-family: roboto;
 	font-size: 0.875rem;
 	margin-top: 0;
@@ -32,17 +21,18 @@ figcaption {
 	color: #003a70 !important;
 	font-size: 1.2rem !important;
 }
-ul li:before {
+ul.chart-list li.chart-list:before {
 	content: none !important;
 }
 
-ul li:after {
+ul.chart-list li.chart-list:after {
 	content: none !important;
 }
 
-ul {
+ul.chart-list {
 	content: none !important;
 }
+
 /* Scoped charting styles. Won't effect anything else on the page. */
 [data-cmsvelte] {
 	@tailwind base;

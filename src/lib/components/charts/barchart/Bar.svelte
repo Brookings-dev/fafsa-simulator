@@ -23,6 +23,7 @@
 	$: columnWidth = (d) => {
 		const vals = $xGet(d);
 		return Math.abs(vals[1] - vals[0]);
+		console.log(vals);
 	};
 
 	$: columnHeight = (d) => {
@@ -46,7 +47,7 @@
 			y={$yGet(d)}
 			width={colWidth}
 			height={colHeight}
-			fill={d.after_election == 'after' ? '#0D659D' : '#5EAEF3'}
+			fill={d.after_election == 'after' ? '#00649F' : '#5AADF6'}
 			{stroke}
 			stroke-width={strokeWidth}
 		/>

@@ -49,7 +49,7 @@
 		{#if d.text == isClicked}
 			<Modal bind:isModalOpen>
 				<svelte:fragment slot="modal-content">
-					<p>{d.modalText}</p>
+					<p class="chart-text bi-leading-5 bi-mb-4">{d.modalText}</p>
 				</svelte:fragment>
 			</Modal>
 		{/if}

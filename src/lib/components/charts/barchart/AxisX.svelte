@@ -4,8 +4,8 @@
  -->
 <script>
 	import { getContext } from 'svelte';
-	const { width, height, xScale, yRange, yScale } = getContext('LayerCake');
-	import { timeFormat, timeParse, max } from 'd3';
+	const { width, height, xScale, yRange, padding } = getContext('LayerCake');
+	import { timeFormat, timeParse } from 'd3';
 
 	/** @type {Boolean} [gridlines=true] - Extend lines from the ticks into the chart space */
 	export let gridlines = true;
@@ -45,6 +45,20 @@
 
 	export let tickMarksCovid = false;
 
+	export let tickMarksIdeoMobile = false;
+
+	export let dyTick;
+
+	export let dxLabel;
+	$: dxLabel = -$width / 2 - $padding.left / 2;
+
+	export let dyLabel;
+
+	export let textAnchorLabel = 'middle';
+
+	export let rightAlignLabel = false;
+	export let centerLabel = false;
+
 	$: isBandwidth = typeof $xScale.bandwidth === 'function';
 
 	$: tickVals = Array.isArray(ticks)
@@ -66,9 +80,9 @@
 		}
 		return 'middle';
 	}
-	const checkMonth = (d) => timeFormat('%b')(timeParse('%Y-%V')(d));
-	const checkWeek = (d) => timeFormat('%V')(timeParse('%Y-%V')(d));
-	const checkDate = (d) => timeFormat('%b %V')(timeParse('%Y-%V')(d));
+	// const checkMonth = (d) => timeFormat('%b')(timeParse('%Y-%V')(d));
+	// const checkWeek = (d) => timeFormat('%V')(timeParse('%Y-%V')(d));
+	const checkDate = (d) => timeFormat('%Y-%V')(timeParse('%Y-%V')(d));
 </script>
 
 <g class="axis x-axis" class:snapTicks>
@@ -78,7 +92,18 @@
 				<line class="gridline {tick}" y1={$height * -1} y2="0" x1="0" x2="0" />
 			{/if}
 			{#if tickMarksIdeo == true}
-				{#if timeFormat('%b')(timeParse('%Y-%m')(tick)) == 'Jan' || timeFormat('%b %Y')(timeParse('%Y-%m')(tick)) == 'Dec 2021'}
+				{#if timeFormat('%b')(timeParse('%Y-%m')(tick)) == 'Jan'}
+					<line
+						class="bi-tick-mark-{i} bi-z-100 bi-stroke-[#333333]"
+						y1={0}
+						y2={6}
+						x1={xTick || isBandwidth ? $xScale.bandwidth() / 2 : 0}
+						x2={xTick || isBandwidth ? $xScale.bandwidth() / 2 : 0}
+					/>
+				{/if}
+			{/if}
+			{#if tickMarksIdeoMobile == true}
+				{#if timeFormat('%m')(timeParse('%Y-%m')(tick)) == '01' && timeFormat('%Y')(timeParse('%Y-%m')(tick)) % 2 == 0}
 					<line
 						class="bi-tick-mark-{i} bi-z-100 bi-stroke-[#333333]"
 						y1={0}
@@ -89,7 +114,7 @@
 				{/if}
 			{/if}
 			{#if tickMarksCovid == true}
-				{#if (checkMonth(tick) == 'Feb' && checkWeek(tick) == 8) || (checkMonth(tick) == 'May' && checkWeek(tick) == 20) || (checkMonth(tick) == 'Aug' && checkWeek(tick) == 33) || (checkMonth(tick) == 'Nov' && checkWeek(tick) == 47 && tick != '2020-06')}
+				{#if checkDate(tick) == '2020-05' || checkDate(tick) == '2021-05' || checkDate(tick) == '2020-18' || checkDate(tick) == '2021-17' || checkDate(tick) == '2020-31' || checkDate(tick) == '2021-30' || checkDate(tick) == '2020-44' || checkDate(tick) == '2021-44'}
 					<line
 						class="bi-tick-mark-{tick} bi-z-100 bi-stroke-[#333333]"
 						y1={0}
@@ -100,7 +125,7 @@
 				{/if}
 			{/if}
 			{#if tickMarksFraud == true}
-				{#if timeFormat('%V')(tick) == 34 || timeFormat('%V')(tick) == 38 || timeFormat('%V')(tick) == 42 || timeFormat('%V')(tick) == 46 || timeFormat('%V')(tick) == 50 || timeFormat('%V')(tick) == 1}
+				{#if timeFormat('%V')(tick) == 37 || timeFormat('%V')(tick) == 41 || timeFormat('%V')(tick) == 45 || timeFormat('%V')(tick) == 50 || timeFormat('%V')(tick) == 1}
 					<line
 						class="bi-tick-mark-{tick} bi-z-100 bi-stroke-[#333333]"
 						y1={0}
@@ -115,20 +140,36 @@
 				x={xTick || isBandwidth ? $xScale.bandwidth() / 2 : 0}
 				y={25}
 				dx=""
-				dy=""
+				dy={dyTick}
 				style="font-size: {fontSize}; fill: {fontColor};"
 				text-anchor={textAnchor(i)}>{formatTick(tick)}</text
 			>
-			<text
-				class="bi-fill-black-light bi-text-xs sm:bi-text-sm bi-font-sans"
-				x={isBandwidth ? $xScale.bandwidth() : 0}
-				y={yTick}
-				dx="15"
-				style="text-anchor:{isBandwidth
-					? 'start'
-					: textAnchor}; font-size: {fontSize}; fill: {fontColor}"
-				>{`${label && i === tickVals.length - 1 ? label : ''}`}
-			</text>
+			{#if centerLabel == true}
+				<text
+					class="bi-fill-black-light bi-text-sm bi-font-sans"
+					x={isBandwidth ? $xScale.bandwidth() : 0}
+					y={yTick}
+					dx={dxLabel}
+					dy={dyLabel}
+					style="text-anchor:{isBandwidth
+						? 'middle'
+						: textAnchorLabel}; font-size: {fontSize}; fill: {fontColor}"
+					>{`${label && i === tickVals.length - 1 ? label : ''}`}
+				</text>
+			{/if}
+			{#if rightAlignLabel == true}
+				<text
+					class="bi-fill-black-light bi-text-sm bi-font-sans"
+					x={isBandwidth ? $xScale.bandwidth() : 0}
+					y={yTick}
+					dx={-26}
+					dy={dyLabel}
+					style="text-anchor:{isBandwidth
+						? 'middle'
+						: textAnchorLabel}; font-size: {fontSize}; fill: {fontColor}"
+					>{`${label && i === tickVals.length - 1 ? label : ''}`}
+				</text>
+			{/if}
 		</g>
 	{/each}
 
