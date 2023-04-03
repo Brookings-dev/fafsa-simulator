@@ -1,32 +1,37 @@
-.content-well {
-	max-width: 1010px !important;
-	margin: 0 auto !important;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@media screen and (max-width: 1010px) {
+/* purgecss start ignore */
+@layer base {
+	.prose h2 {
+		@apply bi-my-1;
+	}
+	.prose p,
+	.prose mark {
+		@apply bi-text-sm bi-font-normal bi-text-black;
+	}
+
+	img.g-aiImg {
+		@apply bi-my-0;
+	}
+
+	main > article > section {
+		@apply bi-my-12 last-of-type:bi-mb-0;
+	}
+
+	/* general section padding and grid widths */
 	.content-well {
-		margin: 0px 10px 0px 10px !important;
+		@apply bi-w-full bi-max-w-7xl bi-px-4 lg:bi-px-8 bi-mx-auto;
 	}
 }
 
-@media screen and (max-width: 768px) {
-	.content-well {
-		padding: 0px 5px 0px 5px !important;
-	}
+body::-webkit-scrollbar {
+	@apply bi-w-2;
 }
-
-.footnote-chart {
-	font-size: 0.75rem !important;
-	margin-bottom: 0px !important;
-	margin-left: 0 !important;
-	margin-right: 0 !important;
+body::-webkit-scrollbar-thumb {
+	@apply bi-bg-white bi-rounded-full;
 }
-.footnote-second-chart {
-	font-size: 0.75rem;
-	margin-bottom: 0px;
-	margin-top: 0px;
-}
-
-.bolded {
-	font-weight: 700 !important;
+body::-webkit-scrollbar-track {
+	@apply bi-bg-transparent;
 }

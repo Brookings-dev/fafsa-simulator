@@ -8,7 +8,7 @@ Code and Development: Molly Cook Escobar
 
 A few things to note:
 
-- Charts need to be wrapped in the <div class="content-well"></div> tag in order to avoid errors in height and width within the essay template.
+- Charts need to be wrapped in the <div class="content-well"></div> tag in order to avoid errors in height and width within the wordpress essay template.
 - Slider.svelte was used for the date picker, but and alternative SliderDateSelect.svelte was left for future reference.
 
 A [Svelte](https://svelte.dev/) starter template built with newsroom CMS's in mind. Dynamically create inline graphics based on the placement of `figure` elements with defined _data-cmsvelte_ attributes.

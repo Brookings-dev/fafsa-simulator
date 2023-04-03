@@ -26,12 +26,14 @@
 		width: 0;
 		height: 0;
 	}
+
 	.thumb-content {
 		position: relative;
 		width: fit-content;
 		height: fit-content;
 		transform: translate(-50%, -50%);
 	}
+
 	.thumb-content::before {
 		content: '';
 		position: absolute;
@@ -39,11 +41,12 @@
 		height: 200%;
 		transform: translate(-25%, -25%) scale(0);
 		border-radius: 100vh;
-		background: var(--thumb-bg, #5784fd);
+		background: var(--thumb-bg, #8dadd0);
 		opacity: 30%;
 		transition: transform 100ms ease-in-out;
 	}
+
 	.thumb-content.active::before {
-		transform: translate(-25%, -25%) scale(1);
+		transform: translate(-25%, -25%) scale(0.85);
 	}
 </style>

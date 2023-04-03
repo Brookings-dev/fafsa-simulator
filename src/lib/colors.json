@@ -1,24 +1,36 @@
 {
-    "bi-red": {
-        "DEFAULT" : "#F55D5B"
-    },
-    "bi-gray": {
-        "border" : "#CCCCCC",
-        "xLight" : "#F2F2F2",
-        "light" : "#E6E6E6",
-        "DEFAULT" : "#B3B3B3",
-        "dark" : "#444444"
-    },
-    "bi-yellow": {
-        "DEFAULT" : "#FDDB46"
-    },
-    "bi-blue": {
-        "DEFAULT" : "#16659D"
-    },
-    "black": {
-        "DEFAULT" : "#000000"
-    },
-    "white": {
-        "DEFAULT" : "#FFFFFF"
-    }
+	"background": "#FAFAFA",
+	"white": {
+		"DEFAULT": "#FFFFFF",
+		"off": "#F9F9F9"
+	},
+	"black": {
+		"DEFAULT": "#000000",
+		"light": "#333333",
+		"lighter": "#707070"
+	},
+	"gray": {
+		"DEFAULT": "#767676",
+		"light": "#EEEEEE"
+	},
+	"blue": {
+		"lightest": "#8DADD0",
+		"lighter": "#8AC6FF",
+		"light": "#326295",
+		"DEFAULT": "#00649F",
+		"dark": "#003A70"
+	},
+	"orange": {
+		"DEFAULT": "#FF9E1B",
+		"dark": "#CC7D16",
+		"darker": "#F26D00"
+	},
+	"yellow": {
+		"DEFAULT": "#E0BB00"
+	},
+	"red": {
+		"DEFAULT": "#EB0F08"
+	}
 }
+
+

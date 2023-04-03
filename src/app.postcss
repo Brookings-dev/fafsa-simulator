@@ -9,13 +9,21 @@
 	letter-spacing: 1px;
 }
 
+figure {
+	font-family: roboto;
+}
+
+body {
+	margin: 0 !important;
+}
+
 .chart-text {
 	font-family: roboto;
 	font-size: 0.875rem;
 	margin-top: 0;
 	margin-bottom: 30px;
 }
-figcaption {
+.fig-chart-title {
 	font-family: roboto !important;
 	font-weight: bold !important;
 	color: #003a70 !important;
@@ -31,36 +39,4 @@ ul.chart-list li.chart-list:after {
 
 ul.chart-list {
 	content: none !important;
-}
-
-/* Scoped charting styles. Won't effect anything else on the page. */
-[data-cmsvelte] {
-	@tailwind base;
-	@tailwind components;
-	@tailwind utilities;
-
-	/* tooltip via data-tooltip="Hello world" */
-	[data-tooltip] {
-		@apply bi-relative bi-inline-block bi-cursor-pointer;
-	}
-	[data-tooltip]:active:after,
-	[data-tooltip]:active:before,
-	[data-tooltip]:focus:after,
-	[data-tooltip]:focus:before,
-	[data-tooltip]:hover:after,
-	[data-tooltip]:hover:before {
-		@apply bi-block bi--translate-y-1;
-	}
-	[data-tooltip]:after {
-		@apply bi-bottom-full bi-bg-black bi-text-white bi-text-xs bi-rounded bi-py-1 bi-px-2 bi-whitespace-nowrap bi-leading-tight;
-		content: attr(data-tooltip);
-	}
-	[data-tooltip]:before {
-		@apply bi-absolute bi-top-[-4px] bi-left-0 bi-w-[8px] bi-h-[8px] bi-border-r bi-border-b bi-border-black bi-bg-black bi-rotate-45;
-		content: '';
-	}
-	[data-tooltip]:after,
-	[data-tooltip]:before {
-		@apply bi-z-40 bi-hidden bi-absolute bi-left-1/2 bi-select-none  bi--translate-x-1/2 bi--translate-y-2 bi-pointer-events-none bi-transition-all bi-duration-300 bi-ease-out;
-	}
 }

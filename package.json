@@ -91,6 +91,7 @@
 		"node-fetch": "^3.3.0",
 		"s-date-range-picker": "^0.3.0",
 		"sharp": "^0.30.6",
+		"svelte-countup": "^0.2.6",
 		"svelte-date-range-select": "^1.0.4",
 		"yargs": "^17.5.1",
 		"yootils": "^0.3.1"

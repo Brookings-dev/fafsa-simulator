@@ -2,19 +2,14 @@
 	"google": {
 		"sheet": [
 			{
-				"id": "15UT9WEmG2Zu9FgRLwf24qSROMau9yLvZvRTE4sS84DY",
+				"id": "1c2MLmsT8RYRLuEpUHO9l0P0pwzNbS0zilKxbPVP9Itw",
 				"gid": "0",
-				"filepath": "src/lib/data/covid-claims.csv"
+				"filepath": "src/lib/data/fafsa.csv"
 			},
 			{
-				"id": "1bYOkc8ji8LWkrQHd-cZqRySCvbf0utph0-RT-6A6Zsw",
-				"gid": "0",
-				"filepath": "src/lib/data/ideology.csv"
-			},
-			{
-				"id": "1Lj2-McIb0v4u_XrfoNgZ9MFHMB5oKSvGD6KbPIQF_cY",
-				"gid": "0",
-				"filepath": "src/lib/data/election-fraud.csv"
+				"id": "1c2MLmsT8RYRLuEpUHO9l0P0pwzNbS0zilKxbPVP9Itw",
+				"gid": "1331977635",
+				"filepath": "src/lib/data/fafsa_long.csv"
 			}
 		],
 		"doc": [
@@ -22,7 +17,24 @@
 				"id": "",
 				"filepath": "src/lib/data/copy.json"
 			}
-		]
+		],
+		"fonts": {
+			"active": true,
+			"weights": [
+				{
+					"name": "Inter",
+					"weights": ["400", "500", "700"],
+					"italics": []
+				}
+			]
+		}
+	},
+	"fontAwesome": {
+		"active": true,
+		"kitId": "030560e164"
+	},
+	"typekit": {
+		"active": false,
+		"kitId": "id"
 	}
-	
 }

@@ -10,24 +10,14 @@ import { Image } from 'svelte-lazy-loader';
 // import ImageSrcset from '$lib/assets/san-felipe-del-morro-castle.jpg?w=300;600;900&webp&srcset';
 
 // viz components
-import ElectionFraud from '$lib/components/charts/barchart/electionFraud.svelte';
-import CovidClaims from '$lib/components/charts/barchart/covidClaims.svelte';
-import EpisodeIdeology from '$lib/components/charts/barchart/episodeIdeology.svelte';
+import BarsDiverge from '$lib/components/charts/BarsDiverge.svelte';
 
 // an array of our components, mapped to match the <figure data-cmsvelte=""> elements in index.html
 const components = [
 
 	{
-		chartID: 'election-fraud',
-		Component: ElectionFraud
-	},
-	{
-		chartID: 'covid-claims',
-		Component: CovidClaims
-	},
-	{
-		chartID: 'episode-ideology',
-		Component: EpisodeIdeology
+		chartID: 'fafsa',
+		Component: BarsDiverge
 	}
 
 ];
